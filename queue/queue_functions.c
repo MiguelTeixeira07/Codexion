@@ -34,7 +34,7 @@ void queue_push(t_queue **self, char *data) {
 	(*self)->top = new;
 }
 
-void pop(t_queue **self) {
+void queue_pop(t_queue **self) {
     t_node *remove;
     
     if ((*self)->top == (*self)->bottom) {

@@ -13,7 +13,7 @@ typedef struct s_queue {
 } t_queue;
 
 
-t_queue *queue_init();
+t_queue *init_queue();
 
 void queue_push(t_queue **self, char *data);
 

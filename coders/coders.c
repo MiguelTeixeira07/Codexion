@@ -40,6 +40,7 @@ void table_push(t_table **self, char *name) {
     } else {
         new->prev = (*self)->last;
         new->next = (*self)->first;
+        new->left_dongle = new->prev->right_dongle;
         
         (*self)->last->next = new;
         (*self)->first->prev = new;

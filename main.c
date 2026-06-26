@@ -8,13 +8,12 @@ int main(int argc, char **argv) {
     t_table *table;
     int num_coders;
     
-    
     if(argc != 2)
         return 0;
     
     table = init_table();
     num_coders = atoi(argv[1]);
-    for(int i = 0; i < num_coders; i++) {
+    for(int i = 1; i <= num_coders; i++) {
         table_push(&table, itoa(i));
     }
     

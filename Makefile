@@ -4,10 +4,12 @@ include targets.mk
 COMPILE = cc -Wall -Wextra -Werror
 REMOVE = rm -f
 
-.PHONY: all clean fclean re t
+.PHONY: all run valg clean fclean re t
 .SILENT:
 
 NAME = codexion
+
+NUM_CODERS = 15
 
 all: $(NAME)
 
@@ -16,10 +18,10 @@ $(NAME): $(OBJS)
 	$(COMPILE) $(OBJS) -o $(NAME)
 
 run: $(NAME)
-	./$(NAME)
+	./$(NAME) $(NUM_CODERS)
 
 valg: $(NAME)
-	valgrind ./$(NAME)
+	valgrind ./$(NAME) $(NUM_CODERS)
 
 clean:
 	printf "$(YELLOW)Cleaning objects.$(RESET)\n"

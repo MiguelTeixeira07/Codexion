@@ -5,6 +5,8 @@
 typedef struct s_coders {
     pthread_t thread;
     void *name;
+    void *left_dongle;
+    void *right_dongle;
     struct s_coders *next;
     struct s_coders *prev;
 } t_coders;
