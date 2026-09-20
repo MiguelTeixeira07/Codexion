@@ -1,22 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   garbage_collector.h                                :+:      :+:    :+:   */
+/*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/09/20 00:56:41 by migteixe          #+#    #+#             */
-/*   Updated: 2026/09/20 00:56:41 by migteixe         ###   ########.fr       */
+/*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
+/*   Updated: 2026/09/20 01:01:27 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../codexion.h"
 
-
-typedef struct s_garbage {
-    void *garbage;
-    struct s_garbage *next;
-} t_garbage;
-
-
-void *gar_col(int action, size_t bytes);

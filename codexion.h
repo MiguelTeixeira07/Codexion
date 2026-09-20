@@ -10,3 +10,4 @@
 
 #define DUMP 2
 #define ALLOC 1
+#define INT_MAX 2147483647
