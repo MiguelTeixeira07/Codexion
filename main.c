@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:04 by migteixe          #+#    #+#             */
-/*   Updated: 2026/09/20 02:22:06 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/04 15:49:28 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "utils/utils.h"
 #include "coders/coders.h"
 #include "parsing/parser.h"
+#include "simulation/simulation.h"
 
 
 int main(int argc, char **argv)
@@ -33,18 +34,7 @@ int main(int argc, char **argv)
 		printf("Parsing error\n");
 		return 0;
 	}
-	//start_simulation(&args);
-	printf(
-		"%d\n%d\n%d\n%d\n%d\n%d\n%d\n%s\n",
-		args.num_coders,
-		args.time_to_burnout,
-		args.time_to_compile,
-		args.time_to_debug,
-		args.time_to_refactor,
-		args.num_compiles,
-		args.dongle_cooldown,
-		args.scheduler
-	);
-	//gar_col(DUMP, 0);
+	start_simulation(&args);
+	gar_col(DUMP, 0);
 	return 0;
 }

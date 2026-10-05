@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:06 by migteixe          #+#    #+#             */
-/*   Updated: 2026/09/20 01:11:03 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/02 22:05:25 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,14 @@ void	*gar_col(int action, size_t bytes)
 	static t_garbage	*garbage_list;
 	void				*data;
 
-	if(action == 1)
+	if(action == ALLOC)
 	{
 		data = malloc(bytes);
 		if(!data)
+		{
 			gar_col(DUMP, 0);
 			return NULL;
+		}
 		add(&garbage_list, data);
 		return data;
 	}

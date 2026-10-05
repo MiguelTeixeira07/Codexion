@@ -6,25 +6,27 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:30 by migteixe          #+#    #+#             */
-/*   Updated: 2026/09/20 01:59:27 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/04 16:11:48 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
-#include "../parsing/parser.h"
 
-void	compile(t_coder_args *args)
+void	compile(t_coder *coder)
 {
-	usleep(args->time_to_compile * 1000);
-	usleep(args->dongle_cooldown * 1000);
+	printf("\ncoder %d compiling...\n\n", coder->number);
+	usleep(coder->prog_args->time_to_compile * 1000);
+	usleep(coder->prog_args->dongle_cooldown * 1000);
 }
 
-void	debug(t_coder_args *args)
+void	debug(t_coder *coder)
 {
-	usleep(args->time_to_debug);
+	printf("coder %d debugging...\n", coder->number);
+	usleep(coder->prog_args->time_to_debug * 1000);
 }
 
-void	refactor(t_coder_args *args)
+void	refactor(t_coder *coder)
 {
-	usleep(args->time_to_refactor * 1000);
+	printf("coder %d refactoring...\n", coder->number);
+	usleep(coder->prog_args->time_to_refactor * 1000);
 }

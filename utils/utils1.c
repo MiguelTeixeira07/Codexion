@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:57:03 by migteixe          #+#    #+#             */
-/*   Updated: 2026/09/20 01:51:25 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/09/30 19:17:47 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,38 +41,21 @@ char	*ft_strdup(const char *s) {
 	return (dest);
 }
 
-char	*itoa(int n)
-{
-	long num = n;
-	int len = (n <= 0) ? 1 : 0;
-	char *str;
-
-	while (num)
-	{
-		len++;
-		num /= 10;
-	}
-	str = gar_col(ALLOC, len + 1);
-	if (!str)
-		return NULL;
-	str[len] = '\0';
-	num = n;
-	if (num == 0)
-		str[0] = '0';
-    if (num < 0)
-	{
-		str[0] = '-';
-		num = -num;
-	}
-	while (num > 0)
-	{
-		str[--len] = (num % 10) + '0';
-		num /= 10;
-	}
-	return str;
-}
-
 int	ft_isdigit(char c)
 {
 	return (c >= '0' && c <= '9');
+}
+
+int ft_strcmp(char *str1, char *str2)
+{
+	int	i;
+
+	i = 0;
+	while (str1[i] && str2[i])
+	{
+		if (str1[i] != str2[i])
+			return (0);
+		i++;
+	}
+	return (str1[i] == str2[i]);
 }

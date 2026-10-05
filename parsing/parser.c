@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/18 15:53:53 by migteixe          #+#    #+#             */
-/*   Updated: 2026/09/20 02:20:09 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/09/30 19:15:03 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,6 @@ static int	only_integer(char *str)
 		if (str[i] < '0' || str[i] > '9')
 			return (0);
 	return (1);
-}
-
-static int	ft_strcmp(char *str1, char *str2)
-{
-	int	i;
-
-	i = 0;
-	while (str1[i] && str2[i])
-	{
-		if (str1[i] != str2[i])
-			return (0);
-		i++;
-	}
-	return (str1[i] == str2[i]);
 }
 
 static void	assign_vals(int *vals, t_args *args)

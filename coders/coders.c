@@ -6,76 +6,49 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:10 by migteixe          #+#    #+#             */
-/*   Updated: 2026/09/20 01:42:54 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/04 17:23:43 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
 
 
-void	*coder(void *param_args)
+void	*coder(void *coder_info)
 {
-	t_coder_args	*args;
+	t_coder	*coder;
 
-	args = (t_coder_args *)param_args;
-	compile(param_args);
-	debug(param_args);
-	refactor(param_args);
-}
-
-t_table	*init_table()
-{
-	t_table *table;
-
-	table = gar_col(ALLOC, sizeof(t_table));
-	if (!table)
-		return NULL;
-	table->first = NULL;
-	table->last = NULL;
-	return table;
-}
-
-void	table_push(t_table **self, int coder) {
-	t_coder	*new;
-
-	new = gar_col(ALLOC, sizeof(t_coder));
-	new->number = coder;
-	new->right_dongle = gar_col(ALLOC, sizeof(pthread_mutex_t));
-	pthread_mutex_init(new->right_dongle, NULL);
-	if (!(*self)->first)
+	coder = (t_coder *)coder_info;
+	while (coder->compile_ammount != coder->prog_args->num_compiles)
 	{
-		(*self)->first = new;
-		(*self)->last = new;
-		new->next = new;
-		new->prev = new;
-		new->right_dongle = new->right_dongle;
-		new->left_dongle = new->right_dongle;
+		if (!pthread_mutex_lock(coder->left_dongle) && !pthread_mutex_lock(coder->right_dongle))
+			compile(coder);
+		pthread_mutex_lock(coder->self_mutex);
+		coder->compile_ammount++;
+		pthread_mutex_unlock(coder->self_mutex);
+		pthread_mutex_unlock(coder->left_dongle);
+		pthread_mutex_unlock(coder->right_dongle);
+		debug(coder);
+		refactor(coder);
 	}
-	else
-	{
-		new->prev = (*self)->last;
-		new->next = (*self)->first;
-		new->left_dongle = new->prev->right_dongle;
-		(*self)->first->left_dongle = new->right_dongle;
-		(*self)->last->next = new;
-		(*self)->first->prev = new;
-		(*self)->last = new;
-	}
+	return (NULL);
 }
 
 void	create_threads(t_table *table) {
-	t_coder			*curr;
-	t_coder_args	*args;
+	t_coder	*curr;
+	int		i;
 
 	curr = table->first;
-	do
+	i = 0;
+	while(++i <= table->num_coders)
 	{
-		pthread_create(&curr->thread, NULL, &coder, args);
+		pthread_create(curr->thread, NULL, &coder, curr);
 		curr = curr->next;
-	} while(curr != table->first);
-	printf("\n");
-	do {
-		pthread_join(curr->thread, NULL);
+	}
+	curr = table->first;
+	i = 0;
+	while (++i <= table->num_coders)
+	{
+		pthread_join(*curr->thread, NULL);
 		curr = curr->next;
-	} while(curr != table->first);
+	}
 }

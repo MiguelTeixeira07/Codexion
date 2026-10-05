@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   queue_functions.c                                  :+:      :+:    :+:   */
+/*   queue_functions2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/09/20 00:56:52 by migteixe          #+#    #+#             */
-/*   Updated: 2026/09/20 01:29:13 by migteixe         ###   ########.fr       */
+/*   Created: 2026/09/30 19:05:11 by migteixe          #+#    #+#             */
+/*   Updated: 2026/09/30 20:21:01 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "queue.h"
-#include "../garbage_collector/garbage_collector.h"
 
 
 t_queue	*init_queue()
@@ -26,21 +25,23 @@ t_queue	*init_queue()
 	return queue;
 }
 
-void	queue_push(t_queue **self, t_coder *coder)
+void	print_queue(t_queue *self)
 {
-	t_node	*new;
+	t_node	*node;
 
-	new = gar_col(ALLOC, sizeof(t_node));
-	if(!new)
+	if(!self->top)
+	{
+		printf("Queue is empty\n");
 		return;
-	new->coder = coder;
-	new->previous = NULL;
-	new->next = (*self)->top;
-	if ((*self)->top)
-		(*self)->top->previous = new;
-	else
-		(*self)->bottom = new;
-	(*self)->top = new;
+	}
+	node = self->top;
+	printf("Front | ");
+	while(node)
+	{
+		printf("%s ", node->coder->number);
+		node = node->next;
+	}
+	printf("| Back\n");
 }
 
 void	queue_pop(t_queue **self)
@@ -63,23 +64,4 @@ void	queue_pop(t_queue **self)
 	}
 	else
 		(*self)->bottom = NULL;
-}
-
-void	print_queue(t_queue *self)
-{
-	t_node	*node;
-
-	if(!self->top)
-	{
-		printf("Queue is empty\n");
-		return;
-	}
-	node = self->top;
-	printf("Front | ");
-	while(node)
-	{
-		printf("%s ", node->coder);
-		node = node->next;
-	}
-	printf("| Back\n");
 }
