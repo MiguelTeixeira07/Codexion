@@ -6,9 +6,12 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/19 17:51:18 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/02 22:46:41 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/07 23:18:13 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef PARSER_H
+# define PARSER_H
 
 typedef struct s_args
 {
@@ -23,3 +26,6 @@ typedef struct s_args
 }	t_args;
 
 int	parse(char **args, t_args *output);
+
+#endif
+

@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:06 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/02 22:05:25 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/07 23:25:59 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,6 @@ void	*gar_col(int action, size_t bytes)
 		add(&garbage_list, data);
 		return data;
 	}
-	else
-		dump(&garbage_list);
+	dump(&garbage_list);
+	return (NULL);
 }

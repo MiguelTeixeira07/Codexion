@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/30 19:05:11 by migteixe          #+#    #+#             */
-/*   Updated: 2026/09/30 20:21:01 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/07 23:30:07 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,30 +38,29 @@ void	print_queue(t_queue *self)
 	printf("Front | ");
 	while(node)
 	{
-		printf("%s ", node->coder->number);
+		printf("%d ", node->coder->number);
 		node = node->next;
 	}
 	printf("| Back\n");
 }
 
-void	queue_pop(t_queue **self)
+void	queue_remove(t_queue *self, t_node *target)
 {
 	t_node	*remove;
 
-	if ((*self)->top == (*self)->bottom)
+	if (self->top == self->bottom)
 	{
-		(*self)->top = NULL;
-		(*self)->bottom = NULL;
+		self->top = NULL;
+		self->bottom = NULL;
 		return;
 	}
-	remove = (*self)->bottom;
-	if(remove->previous)
-	{
-		(*self)->bottom = remove->previous;
-		printf("%s\n", remove->coder);
-		remove = NULL;
-		(*self)->bottom->next = NULL;
-	}
-	else
-		(*self)->bottom = NULL;
+	remove = self->top;
+	while (remove->next && remove->coder->number != target->coder->number)
+		remove = remove->next;
+	if (!remove)
+		return ;
+	if (!remove->next)
+		self->bottom = remove->previous;
+	remove->previous->next = remove->next;
+	remove = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:04 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/04 15:49:28 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/07 23:20:51 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@
 
 int main(int argc, char **argv)
 {
-	t_table	*table;
 	t_args	args;
-	int		num_coders;
 
 	if(argc != 9)
 	{

@@ -8,7 +8,7 @@ SIM_DIR = ./simulation
 
 SRCS = $(addsuffix .c, \
 	main \
-	$(addprefix $(CODERS_DIR)/, coders actions) \
+	$(addprefix $(CODERS_DIR)/, coders actions table inits) \
 	$(addprefix $(GC_DIR)/, garbage_collector) \
 	$(addprefix $(Q_DIR)/,  queue_functions1 queue_functions2) \
 	$(addprefix $(UTIL_DIR)/, utils1 utils2) \
