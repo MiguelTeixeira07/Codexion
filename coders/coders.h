@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:08 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/07 23:31:34 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/08 19:40:46 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "../codexion.h"
 # include "../garbage_collector/garbage_collector.h"
 # include "../parsing/parser.h"
+
 
 typedef struct s_coder {
 	pthread_t		*thread;
@@ -46,8 +47,7 @@ typedef struct s_table {
 
 //actions.c
 void	compile(t_coder *args);
-void	debug(t_coder *args);
-void	refactor(t_coder *args);
+void	debug_and_refactor(t_coder *args);
 
 //coders.c
 void	*coder(void *coder_info);

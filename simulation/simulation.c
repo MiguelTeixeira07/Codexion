@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/07 23:50:37 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/08 19:34:37 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,18 @@ void	*monitor_routine(void *args)
 	int		i;
 
 	table = (t_table *)args;
-	printf("Monitor just woke tf up!\n");
+	printf("Monitor was just created\n");
 	pthread_mutex_lock(table->table_mutex);
 	pthread_cond_wait(table->condition, table->table_mutex);
 	pthread_mutex_unlock(table->table_mutex);
+	printf("Monitor just woke tf up!\n");
 	queue = gar_col(ALLOC, sizeof(t_queue));
 	while (table->finished < table->num_coders)
 	{
 		i = 0;
 		curr_c = table->first;
-		printf("does ts run?\n");
 		pthread_mutex_lock(table->table_mutex);
+		//printf("Adding coders to the queue...\n");
 		while (++i <= table->num_coders)
 		{
 			if (curr_c->waiting)
@@ -56,12 +57,12 @@ void	*monitor_routine(void *args)
 				queue_push(queue, curr_c, curr_c->prog_args->scheduler);
 				pthread_cond_signal(curr_c->condition);
 				pthread_mutex_unlock(table->table_mutex);
-				continue ;
 			}
 			curr_c = curr_c->next;
 		}
 
 		i = 0;
+		//printf("Getting coders to compile\n");
 		while (curr_q)
 		{
 			if (curr_q->n_compiles < curr_q->coder->compile_ammount)
