@@ -3,24 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   table.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/04 17:07:25 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/07 23:50:18 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/10 17:07:45 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
 
 
-int	table_push(t_table *self, t_args *args, int coder) {
+int	table_push(t_table *self, int coder) {
 	t_coder	*new;
 
 	self->num_coders++;
-	if (init_coder(self, &new, args, coder))
-		return (1);
+	if (init_coder(self, &new, coder))
+		return (-1);
 	pthread_mutex_lock(self->table_mutex);
-	new->table_mutex = self->table_mutex;
 	if (self->num_coders == 1) {
 		pthread_mutex_unlock(self->table_mutex);
 		return (first_coder(self, new));

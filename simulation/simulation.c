@@ -6,28 +6,42 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/08 19:34:37 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/10 19:24:04 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "simulation.h"
 
 
-/* static int	check_end(t_table *table)
+static int	check_end(t_table *table)
 {
-	t_coder	*curr;
-	int		i;
+	t_coder			*curr;
+	int				i;
+	int				finished;
+	struct timeval	current_time;
 
+	finished = 0;
 	curr = table->first;
 	i = 0;
 	while(++i <= table->num_coders)
 	{
-		if (curr->compile_ammount >= curr->prog_args->num_compiles)
-			table->finished++;
+		gettimeofday(&current_time, NULL);
+		if (
+			(int)(current_time.tv_sec * 1000000 + current_time.tv_usec) -
+			curr->last_compile_start + table->args->time_to_compile >
+			table->args->time_to_burnout
+		) {
+			printf("%f\n", ((int)(current_time.tv_sec * 1000000 + current_time.tv_usec) -
+			curr->last_compile_start + table->args->time_to_compile));
+			return (2);
+		}
+		if (curr->compile_ammount >= curr->table->args->num_compiles)
+			finished++;
 		curr = curr->next;
 	}
-	return 0;
-} */
+	table->finished = finished;
+	return (table->finished == table->num_coders);
+}
 
 void	*monitor_routine(void *args)
 {
@@ -46,6 +60,12 @@ void	*monitor_routine(void *args)
 	queue = gar_col(ALLOC, sizeof(t_queue));
 	while (table->finished < table->num_coders)
 	{
+		table->result = check_end(table);
+		if (table->result)
+		{
+			printf("This is not supposed to happen %d\n", table->result);
+			return (NULL);
+		}
 		i = 0;
 		curr_c = table->first;
 		pthread_mutex_lock(table->table_mutex);
@@ -54,7 +74,7 @@ void	*monitor_routine(void *args)
 		{
 			if (curr_c->waiting)
 			{
-				queue_push(queue, curr_c, curr_c->prog_args->scheduler);
+				queue_push(queue, curr_c, curr_c->table->args->scheduler);
 				pthread_cond_signal(curr_c->condition);
 				pthread_mutex_unlock(table->table_mutex);
 			}
@@ -66,10 +86,13 @@ void	*monitor_routine(void *args)
 		while (curr_q)
 		{
 			if (curr_q->n_compiles < curr_q->coder->compile_ammount)
-				queue_remove(queue, curr_q);
+			{
+				curr_q = curr_q->next;
+				queue_remove(queue, curr_q->previous);
+			}
 
 			pthread_mutex_lock(curr_q->coder->self_mutex);
-			if (!(curr_q->coder->next->compiling || curr_q->coder->prev->compiling))
+			if (!curr_q->coder->next->compiling && !curr_q->coder->prev->compiling)
 			{
 				curr_q->n_compiles = curr_q->coder->compile_ammount;
 				pthread_cond_signal(curr_q->coder->condition);
@@ -82,28 +105,26 @@ void	*monitor_routine(void *args)
 	return (NULL);
 }
 
-void	start_simulation(t_args *args)
+int	start_simulation(t_args *args)
 {
 	int			i;
 	t_table		*table;
 	pthread_t	monitor;
 
-	table = init_table();
+	table = init_table(args);
 	if (!table)
-		return ;
+		return -1;
 	i = -1;
 	pthread_mutex_lock(table->table_mutex);
 	//printf("%d\n", table->num_coders);
 	pthread_mutex_unlock(table->table_mutex);
 	while (++i < args->num_coders)
 	{
-		if (table_push(table, args, i)) {
-			return ;
+		if (table_push(table, i)) {
+			return -1;
 		}
 	}
 	//pthread_mutex_lock(table->table_mutex);
-	create_threads(table, &monitor);
-	printf("something\n");
+	return (create_threads(table, &monitor));
 	//pthread_mutex_unlock(table->table_mutex);
-	return ;
 }
