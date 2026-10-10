@@ -13,8 +13,8 @@
 #ifndef QUEUE_H
 # define QUEUE_H
 
-# include "../codexion.h"
 # include "../coders/coders.h"
+# include "../codexion.h"
 
 
 typedef struct s_node

@@ -13,6 +13,8 @@
 #ifndef PARSER_H
 # define PARSER_H
 
+# include "../codexion.h"
+
 typedef struct s_args
 {
 	int		num_coders;

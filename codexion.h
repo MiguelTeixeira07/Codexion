@@ -12,4 +12,11 @@
 # define ALLOC 1
 # define INT_MAX 2147483647
 
+# include "garbage_collector/garbage_collector.h"
+# include "parsing/parser.h"
+# include "coders/coders.h"
+# include "queue/queue.h"
+# include "simulation/simulation.h"
+# include "utils/utils.h"
+
 #endif

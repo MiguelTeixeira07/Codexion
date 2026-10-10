@@ -14,9 +14,7 @@
 #ifndef SIMULATION_H
 # define SIMULATION_H
 
-# include "../parsing/parser.h"
-# include "../coders/coders.h"
-# include "../queue/queue.h"
+# include "../codexion.h"
 
 int 	start_simulation(t_args *args);
 void    *monitor_routine(void *args);

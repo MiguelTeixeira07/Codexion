@@ -27,12 +27,24 @@ static int	check_end(t_table *table)
 	{
 		gettimeofday(&current_time, NULL);
 		if (
-			(int)(current_time.tv_sec * 1000000 + current_time.tv_usec) -
-			curr->last_compile_start + table->args->time_to_compile >
+			curr->compile_ammount && !curr->compiling &&
+			(current_time.tv_sec * 1000) + (double)(current_time.tv_usec / 1000000) -
+			(curr->last_compile_start + table->args->time_to_compile) >
 			table->args->time_to_burnout
 		) {
-			printf("%f\n", ((int)(current_time.tv_sec * 1000000 + current_time.tv_usec) -
-			curr->last_compile_start + table->args->time_to_compile));
+			printf(
+				"%d %lf %lf %d %ld %ld\n",
+				curr->compile_ammount,
+				(double)(
+					(current_time.tv_sec * 1000) +
+					(double)(current_time.tv_usec / 1000000) -
+					(curr->last_compile_start + table->args->time_to_compile)
+				),
+				curr->last_compile_start,
+				table->args->time_to_compile,
+				current_time.tv_sec,
+				current_time.tv_usec
+			);
 			return (2);
 		}
 		if (curr->compile_ammount >= curr->table->args->num_compiles)
@@ -100,7 +112,7 @@ void	*monitor_routine(void *args)
 			}
 			curr_q = curr_q->next;
 		}
-		usleep(10000);
+		//usleep(10000);
 	}
 	return (NULL);
 }

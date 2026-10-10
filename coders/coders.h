@@ -14,8 +14,6 @@
 # define CODERS_H
 
 # include "../codexion.h"
-# include "../garbage_collector/garbage_collector.h"
-# include "../parsing/parser.h"
 
 
 struct s_table;
@@ -28,7 +26,7 @@ typedef struct s_coder {
 	int				waiting;
 	int				compiling;
 	int				compile_ammount;
-	float			last_compile_start;
+	double			last_compile_start;
 	pthread_mutex_t	*left_dongle;
 	pthread_mutex_t	*right_dongle;
 	struct s_coder	*next;

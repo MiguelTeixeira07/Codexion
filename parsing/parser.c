@@ -11,9 +11,6 @@
 /* ************************************************************************** */
 
 #include "parser.h"
-#include "../codexion.h"
-#include "../coders/coders.h"
-#include "../utils/utils.h"
 
 static int	ft_atoi(char *str)
 {

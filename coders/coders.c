@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "coders.h"
-#include "../simulation/simulation.h"
 
 
 void	*coder(void *coder_info)

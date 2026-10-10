@@ -12,6 +12,28 @@
 
 #include "coders.h"
 
+static int	smart_sleep(long duration_ms, t_table *table)
+{
+	struct timeval	time;
+	double			start
+	int				finished;
+
+	gettimeofday(&time, NULL);
+	start = (double)(time.tv_sec * 1000) + (time.tv_usec / 1000000);
+	while (!simulation_stopped(table))
+	{
+		finished = check_end(table);
+		if (finished)
+			return (finished);
+		gettimeofday(&time, NULL);
+		now = (double)(time.tv_sec * 1000) + (time.tv_usec / 1000000);
+		if (now - start >= duration_ms)
+			break ;
+		usleep(500);
+	}
+	return (0);
+}
+
 void	compile(t_coder *coder)
 {
 	struct timeval	time;
@@ -27,12 +49,10 @@ void	compile(t_coder *coder)
 	pthread_mutex_lock(coder->right_dongle);
 	pthread_mutex_lock(coder->left_dongle);
 	gettimeofday(&time, NULL);
-	coder->last_compile_start = (float)(
-		time.tv_sec * 1000000 + time.tv_usec
-	);
+	coder->last_compile_start = (double)(time.tv_sec * 1000) + (time.tv_usec / 1000000);
 	coder->compile_ammount++;
 	printf("coder %d compiling...\n", coder->number);
-	usleep(coder->table->args->time_to_compile * 1000);
+	slart_sleep(coder->table->args->time_to_compile, coder->table);
 	pthread_mutex_unlock(coder->right_dongle);
 	pthread_mutex_unlock(coder->left_dongle);
 	pthread_mutex_unlock(coder->self_mutex);
@@ -41,7 +61,7 @@ void	compile(t_coder *coder)
 void	debug_and_refactor(t_coder *coder)
 {
 	printf("coder %d debugging...\n", coder->number);
-	usleep(coder->table->args->time_to_debug * 1000);
+	start_sleep(coder->table->args->time_to_debug, coder->table);
 	printf("coder %d refactoring...\n", coder->number);
-	usleep(coder->table->args->time_to_refactor * 1000);
+	smart_sleep(coder->table->args->time_to_refactor, coder->table);
 }
