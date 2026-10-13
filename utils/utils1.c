@@ -13,22 +13,11 @@
 #include "utils.h"
 #include "../garbage_collector/garbage_collector.h"
 
-
-size_t 	ft_strlen(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
 char	*ft_strdup(const char *s) {
 	char	*dest;
 	int		i;
 
-	dest = gar_col(ALLOC, (ft_strlen((char *)s) + 1));
+	dest = gar_col(ALLOC, (strlen((char *)s) + 1));
 	if (!dest)
 		return (NULL);
 	i = 0;
@@ -46,16 +35,19 @@ int	ft_isdigit(char c)
 	return (c >= '0' && c <= '9');
 }
 
-int ft_strcmp(char *str1, char *str2)
+__time_t gettime(void)
 {
-	int	i;
+	struct timeval tv;
 
-	i = 0;
-	while (str1[i] && str2[i])
-	{
-		if (str1[i] != str2[i])
-			return (0);
-		i++;
-	}
-	return (str1[i] == str2[i]);
+	if (gettimeofday(&tv, NULL) == -1)
+		return -1;
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
+
+void	log_msg(char *str, pthread_mutex_t *log_mutex, int coder_num)
+{
+	pthread_mutex_lock(log_mutex);
+	printf("%d %s\n", coder_num, str);
+	pthread_mutex_unlock(log_mutex);
+}
+

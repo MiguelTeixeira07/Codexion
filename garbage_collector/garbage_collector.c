@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:06 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/07 23:25:59 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/13 00:16:28 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	*gar_col(int action, size_t bytes)
 			gar_col(DUMP, 0);
 			return NULL;
 		}
+		memset(data, 0, bytes);
 		add(&garbage_list, data);
 		return data;
 	}

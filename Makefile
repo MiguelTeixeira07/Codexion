@@ -14,8 +14,8 @@ NAME = codexion
 
 PARGS = 
 
-NUM_CODERS		= 5
-TT_BURNOUT		= 1000
+NUM_CODERS		= 2
+TT_BURNOUT		= 10000
 TT_COMPILE		= 2000
 TT_DEBUG		= 500
 TT_REFACTOR		= 500
@@ -39,11 +39,11 @@ $(NAME): $(OBJS)
 debug: fclean $(OBJS)
 	$(COMPILE) $(OBJS) -DDEBUG=1 -o $(NAME)
 
-run: $(NAME)
+run: # $(NAME)
 	./$(NAME) $(ARGS)
 
-valg: $(NAME)
-	valgrind ./$(NAME) $(ARGS)
+valg: # $(NAME)
+	valgrind --tool=helgrind ./$(NAME) $(ARGS)
 
 gdb:
 	gdb --tui --args ./$(NAME) $(ARGS) 

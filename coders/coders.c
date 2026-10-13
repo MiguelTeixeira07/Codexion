@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:10 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/10 17:19:43 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/13 00:19:02 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,10 @@ void	*coder(void *coder_info)
 	pthread_mutex_lock(coder->self_mutex);
 	pthread_cond_wait(coder->table->condition, coder->self_mutex);
 	pthread_mutex_unlock(coder->self_mutex);
-	printf("Coder %d: I just woke up!\n", coder->number);
+	log_msg("I just woke up!", coder->log_mutex, coder->number);
 	while (1)
-	{
-		compile(coder);
-		debug_and_refactor(coder);
-	}
+		if (compile(coder) || debug_and_refactor(coder))
+			return (NULL);
 	return (NULL);
 }
 
@@ -47,7 +45,7 @@ int	create_threads(t_table *table, pthread_t *monitor) {
 	if (!monitor)
 		return -1;
 	pthread_create(monitor, NULL, &monitor_routine, table);
-	while(++i <= table->num_coders)
+	while(++i <= table->args->num_coders)
 	{
 		pthread_create(curr->thread, NULL, &coder, curr);
 		curr = curr->next;
@@ -57,7 +55,7 @@ int	create_threads(t_table *table, pthread_t *monitor) {
 	usleep(1000000);
 	wake_em_up(table);
 	pthread_join(*monitor, NULL);
-	while (++i <= table->num_coders)
+	while (++i <= table->args->num_coders)
 	{
 		pthread_join(*curr->thread, NULL);
 		curr = curr->next;

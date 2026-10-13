@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/30 19:16:41 by migteixe          #+#    #+#             */
-/*   Updated: 2026/09/30 19:17:33 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/13 00:20:49 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
+#include <pthread.h>
 
 static int	outsize(int n)
 {

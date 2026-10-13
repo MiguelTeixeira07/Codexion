@@ -3,40 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   queue_functions2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/30 19:05:11 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/07 23:30:07 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/12 18:25:12 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "queue.h"
 
-
-t_queue	*init_queue()
+t_queue	*init_queue(void)
 {
 	t_queue	*queue;
 
 	queue = gar_col(ALLOC, sizeof(t_queue));
 	if (!queue)
-		return NULL;
+		return (NULL);
 	queue->top = NULL;
 	queue->bottom = NULL;
-	return queue;
+	return (queue);
 }
 
 void	print_queue(t_queue *self)
 {
 	t_node	*node;
 
-	if(!self->top)
+	if (!self->top)
 	{
 		printf("Queue is empty\n");
-		return;
+		return ;
 	}
 	node = self->top;
 	printf("Front | ");
-	while(node)
+	while (node)
 	{
 		printf("%d ", node->coder->number);
 		node = node->next;
@@ -52,15 +51,14 @@ void	queue_remove(t_queue *self, t_node *target)
 	{
 		self->top = NULL;
 		self->bottom = NULL;
-		return;
-	}
-	remove = self->top;
-	while (remove->next && remove->coder->number != target->coder->number)
-		remove = remove->next;
-	if (!remove)
 		return ;
+	}
+	remove = target;
 	if (!remove->next)
 		self->bottom = remove->previous;
-	remove->previous->next = remove->next;
+	else if (!remove->previous)
+		self->top = remove->next;
+	else
+		remove->previous->next = remove->next;
 	remove = NULL;
 }

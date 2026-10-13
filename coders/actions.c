@@ -6,27 +6,27 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:30 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/10 19:19:23 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/12 23:44:37 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
 
+
 static int	smart_sleep(long duration_ms, t_table *table)
 {
-	struct timeval	time;
-	double			start
-	int				finished;
+	__time_t	start;
+	__time_t	now;
+	int			finished;
 
-	gettimeofday(&time, NULL);
-	start = (double)(time.tv_sec * 1000) + (time.tv_usec / 1000000);
-	while (!simulation_stopped(table))
+	start = gettime();
+	while (1)
 	{
 		finished = check_end(table);
 		if (finished)
 			return (finished);
-		gettimeofday(&time, NULL);
-		now = (double)(time.tv_sec * 1000) + (time.tv_usec / 1000000);
+		now = gettime();
+		//printf("start: %lf\t|\tnow: %lf\n", start, now);
 		if (now - start >= duration_ms)
 			break ;
 		usleep(500);
@@ -34,34 +34,50 @@ static int	smart_sleep(long duration_ms, t_table *table)
 	return (0);
 }
 
-void	compile(t_coder *coder)
+int	compile(t_coder *coder)
 {
-	struct timeval	time;
+	int				sleep_res;
 
 	pthread_mutex_lock(coder->table->table_mutex);
-	//printf("%d Waiting to be added to the queue...\n", coder->number);
+	log_msg("Waiting to be added to the queue...", coder->log_mutex, coder->number);
 	coder->waiting = 1;
 	pthread_cond_wait(coder->condition, coder->table->table_mutex);
+	log_msg("I was added to the queue", coder->log_mutex, coder->number);
+	coder->in_queue = 1;
 	pthread_mutex_unlock(coder->table->table_mutex);
+	log_msg("Locking self mutex", coder->log_mutex, coder->number);
 	pthread_mutex_lock(coder->self_mutex);
-	//printf("%d Waiting to compile...\n", coder->number);
+	log_msg("Waiting to compile...", coder->log_mutex, coder->number);
 	pthread_cond_wait(coder->condition, coder->self_mutex);
 	pthread_mutex_lock(coder->right_dongle);
 	pthread_mutex_lock(coder->left_dongle);
-	gettimeofday(&time, NULL);
-	coder->last_compile_start = (double)(time.tv_sec * 1000) + (time.tv_usec / 1000000);
+	coder->last_compile_start = gettime();
+	coder->in_queue = 0;
+	coder->compiling = 1;
 	coder->compile_ammount++;
-	printf("coder %d compiling...\n", coder->number);
-	slart_sleep(coder->table->args->time_to_compile, coder->table);
+	log_msg("Compiling...", coder->log_mutex, coder->number);
+	sleep_res = smart_sleep(coder->table->args->time_to_compile, coder->table);
+	if (sleep_res)
+		return sleep_res;
+	log_msg("Finished compiling", coder->log_mutex, coder->number);
+	coder->compiling = 0;
 	pthread_mutex_unlock(coder->right_dongle);
 	pthread_mutex_unlock(coder->left_dongle);
 	pthread_mutex_unlock(coder->self_mutex);
+	return (0);
 }
 
-void	debug_and_refactor(t_coder *coder)
+int	debug_and_refactor(t_coder *coder)
 {
+	int	sleep_res;
+
 	printf("coder %d debugging...\n", coder->number);
-	start_sleep(coder->table->args->time_to_debug, coder->table);
+	sleep_res = smart_sleep(coder->table->args->time_to_debug, coder->table);
+	if (sleep_res)
+		return sleep_res;
 	printf("coder %d refactoring...\n", coder->number);
-	smart_sleep(coder->table->args->time_to_refactor, coder->table);
+	sleep_res = smart_sleep(coder->table->args->time_to_refactor, coder->table);
+	if (sleep_res)
+		return sleep_res;
+	return (0);
 }

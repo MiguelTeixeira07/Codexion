@@ -12,23 +12,6 @@
 
 #include "parser.h"
 
-static int	ft_atoi(char *str)
-{
-	unsigned int	num;
-	int				i;
-
-	num = 0;
-	i = 0;
-	while (ft_isdigit(str[i]))
-	{
-		num = (num * 10) + (str[i] - '0');
-		if (num > INT_MAX)
-			return (0);
-		i++;
-	}
-	return (num);
-}
-
 static int	only_integer(char *str)
 {
 	int	i;
@@ -61,12 +44,12 @@ int	parse(char **args, t_args *output)
 	{
 		if (!only_integer(args[i]))
 			return (1);
-		vals[i] = ft_atoi(args[i]);
+		vals[i] = atoi(args[i]);
 		if (vals[i] < 1)
 			return (1);
 		i++;
 	}
-	if (!ft_strcmp(args[i], "fifo") && !ft_strcmp(args[i], "edf"))
+	if (!strcmp(args[i], "fifo") && !strcmp(args[i], "edf"))
 		return (1);
 	assign_vals(vals, output);
 	output->scheduler = args[i];

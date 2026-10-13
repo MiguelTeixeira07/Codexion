@@ -16,7 +16,8 @@
 
 # include "../codexion.h"
 
-int 	start_simulation(t_args *args);
+int 	start_simulation(struct s_args *args);
+int     check_end(struct s_table *table);
 void    *monitor_routine(void *args);
 
 #endif

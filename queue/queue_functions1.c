@@ -3,33 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   queue_functions1.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:52 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/07 23:29:42 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/13 21:45:52 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "queue.h"
-#include "../garbage_collector/garbage_collector.h"
-#include "../utils/utils.h"
-#include "../coders/coders.h"
-
-
 
 static void	queue_fifo_push(t_queue *self, t_coder *coder)
 {
 	t_node	*new;
-	
+
 	new = gar_col(ALLOC, sizeof(t_node));
-	if(!new)
-		return;
+	if (!new)
+		return ;
 	new->coder = coder;
 	new->n_compiles = coder->compile_ammount;
-	new->previous = NULL;
-	new->next = self->top;
+	new->next = NULL;
+	new->previous = self->top;
 	if (self->top)
-		self->top->previous = new;
+		self->top->next = new;
 	else
 		self->bottom = new;
 	self->top = new;
@@ -78,8 +73,9 @@ static void	queue_edf_push(t_queue *self, t_coder *coder)
 
 void	queue_push(t_queue *self, t_coder *coder, char *scheduler)
 {
-	if (ft_strcmp(scheduler, "fifo"))
-		queue_fifo_push(self, coder);
+	(void)scheduler;
+	//if (strcmp(scheduler, "fifo"))
+	queue_fifo_push(self, coder);
 	/*else
 		queue_edf_push(self, coder);*/
 }
