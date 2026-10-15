@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   queue_functions1.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:52 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/13 21:45:52 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/14 17:03:24 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,12 @@ static void	queue_fifo_push(t_queue *self, t_coder *coder)
 	if (!new)
 		return ;
 	new->coder = coder;
-	new->n_compiles = coder->compile_ammount;
 	new->next = NULL;
-	new->previous = self->top;
-	if (self->top)
-		self->top->next = new;
+	if (!self->top)
+		self->top = new;
 	else
-		self->bottom = new;
-	self->top = new;
+		self->bottom->next = new;
+	self->bottom = new;
 }
 
 /* static void	insert_first(t_queue *self, t_node *new)

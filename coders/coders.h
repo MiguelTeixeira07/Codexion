@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:08 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/13 00:18:55 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/14 17:53:54 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct s_table {
 	pthread_cond_t	*condition;
 	int				finished;
 	int				result;
-	int				dead_coders;
+	int				dead_coder;
 	struct s_args	*args;
 } t_table;
 
@@ -61,6 +61,6 @@ int		table_push(t_table *self, int coder);
 //inits.c
 int	first_coder(t_table *self, t_coder *new);
 int	init_coder(t_table *table, t_coder **new, int coder);
-t_table	*init_table();
+t_table	*init_table(struct s_args *prog_args);
 
 #endif

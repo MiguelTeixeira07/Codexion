@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/13 21:35:50 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/14 17:56:20 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,22 @@ int	check_end(t_table *table)
 	i = 0;
 	while(++i <= table->args->num_coders)
 	{
-		if (table->dead_coders)
+		pthread_mutex_lock(curr->self_mutex);
+		if (table->dead_coder)
 		{
+			pthread_mutex_unlock(curr->self_mutex);
 			pthread_mutex_unlock(table->table_mutex);
-			return (2);
+			return (table->dead_coder);
 		}
 		if (curr->compile_ammount >= curr->table->args->num_compiles)
 			finished++;
 		curr = curr->next;
+		pthread_mutex_unlock(curr->self_mutex);
 	}
 	table->finished = finished;
 	return_val = (table->finished == table->args->num_coders);
 	pthread_mutex_unlock(table->table_mutex);
-	return (return_val);
+	return (-return_val);
 }
 
 void	*monitor_routine(void *args)
@@ -73,16 +76,19 @@ void	*monitor_routine(void *args)
 		{
 			if (curr_c->waiting)
 			{
+				pthread_mutex_lock(curr_c->self_mutex);
 				queue_push(queue, curr_c, curr_c->table->args->scheduler);
 				curr_c->waiting = 0;
 				pthread_mutex_unlock(table->table_mutex);
 				pthread_cond_signal(curr_c->condition);
+				//printf("Monitor: Added coder %d to the queue\n", curr_c->number);
 				usleep(1000);
 				pthread_mutex_lock(table->table_mutex);
+				print_queue(queue);
+				pthread_mutex_unlock(curr_c->self_mutex);
 			}
 			curr_c = curr_c->next;
 		}
-		print_queue(queue);
 		curr_q = queue->top;
 		while (curr_q)
 		{
@@ -124,7 +130,6 @@ int	start_simulation(t_args *args)
 		return -1;
 	i = 0;
 	pthread_mutex_lock(table->table_mutex);
-	//printf("%d\n", table->num_coders);
 	pthread_mutex_unlock(table->table_mutex);
 	while (++i <= args->num_coders)
 	{
@@ -132,7 +137,5 @@ int	start_simulation(t_args *args)
 			return -1;
 		}
 	}
-	//pthread_mutex_lock(table->table_mutex);
 	return (create_threads(table, &monitor));
-	//pthread_mutex_unlock(table->table_mutex);
 }

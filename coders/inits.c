@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/06 22:18:44 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/10 18:56:44 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/14 17:07:28 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ t_table	*init_table(t_args *prog_args)
 	table->first = NULL;
 	table->last = NULL;
 	table->result = 0;
-	table->dead_coders = 0;
+	table->dead_coder = 0;
 	table->table_mutex = gar_col(ALLOC, sizeof(pthread_mutex_t));
 	if (!table->table_mutex)
 		return (NULL);

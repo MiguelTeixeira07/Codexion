@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:06 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/13 00:16:28 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/14 17:33:23 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

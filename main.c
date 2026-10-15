@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:04 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/12 17:40:39 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/14 17:07:11 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ int main(int argc, char **argv)
 	}
 	result = start_simulation(&args);
 	if (result == -1)
-		printf("Bad ending 2. Malloc fail.");
-	if (result == 1)
 		printf("Good ending. Every coder reached compile goal.");
-	if (result == 2)
+	else if (result == -2)
+		printf("Bad ending 2. Malloc fail.");
+	else
 		printf("Bad ending 1. One or more coders died.");
 	gar_col(DUMP, 0);
 	return 0;
