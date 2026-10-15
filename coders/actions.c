@@ -23,51 +23,51 @@ static int	smart_sleep(long duration_ms, t_coder *coder)
 	pthread_mutex_unlock(coder->self_mutex);
 	while (1)
 	{
-		finished = check_end(coder->table);
+		//log_msg("waiting in smart sleep...", coder->table->log_mutex, coder->number);
+		finished = 0;//check_end(coder->table);
 		if (finished)
 		{
 			pthread_mutex_lock(coder->self_mutex);
 			return (finished);
 		}
 		now = gettime();
-		//printf("start: %lf\t|\tnow: %lf\n", start, now);
+		//printf("start: %ld\t|\tnow: %ld\t|\tduration: %ld\t|\tdelta: %ld\n", start, now, duration_ms, (now - start));
 		if (now - start >= duration_ms)
 			break ;
-		usleep(500);
+		usleep(1000);
 	}
 	pthread_mutex_lock(coder->self_mutex);
+	log_msg("Got here", coder->table->log_mutex, coder->number);
 	return (0);
 }
 
 int	compile(t_coder *coder)
 {
-	int				sleep_res;
-
 	pthread_mutex_lock(coder->table->table_mutex);
 	coder->waiting = 1;
-	log_msg("Waiting to be added to the queue...", coder->log_mutex, coder->number);
+	log_msg("Waiting to be added to the queue...", coder->table->log_mutex, coder->number);
 	pthread_cond_wait(coder->condition, coder->table->table_mutex);
-	log_msg("I was added to the queue", coder->log_mutex, coder->number);
+	coder->waiting = 0;
+	log_msg("I was added to the queue", coder->table->log_mutex, coder->number);
 	coder->in_queue = 1;
 	pthread_mutex_unlock(coder->table->table_mutex);
-	log_msg("Locking self mutex", coder->log_mutex, coder->number);
+	log_msg("Locking self mutex", coder->table->log_mutex, coder->number);
 	pthread_mutex_lock(coder->self_mutex);
-	log_msg("Waiting to compile...", coder->log_mutex, coder->number);
+	log_msg("Waiting to compile...", coder->table->log_mutex, coder->number);
 	pthread_cond_wait(coder->condition, coder->self_mutex);
 	pthread_mutex_lock(coder->right_dongle);
 	pthread_mutex_lock(coder->left_dongle);
 	coder->last_compile_start = gettime();
-	coder->in_queue = 0;
 	coder->compiling = 1;
+	coder->in_queue = 0;
 	coder->compile_ammount++;
-	log_msg("Compiling...", coder->log_mutex, coder->number);
-	sleep_res = smart_sleep(coder->table->args->time_to_compile, coder);
-	if (sleep_res)
-		return sleep_res;
-	log_msg("Finished compiling", coder->log_mutex, coder->number);
+	log_msg("Compiling...", coder->table->log_mutex, coder->number);
+	if (smart_sleep(coder->table->args->time_to_compile, coder))
+		return 1;
+	log_msg("Finished compiling", coder->table->log_mutex, coder->number);
 	coder->compiling = 0;
-	pthread_mutex_unlock(coder->right_dongle);
 	pthread_mutex_unlock(coder->left_dongle);
+	pthread_mutex_unlock(coder->right_dongle);
 	pthread_mutex_unlock(coder->self_mutex);
 	return (0);
 }
@@ -76,11 +76,11 @@ int	debug_and_refactor(t_coder *coder)
 {
 	int	sleep_res;
 
-	printf("coder %d debugging...\n", coder->number);
+	log_msg("Debugging...", coder->table->log_mutex, coder->number);
 	sleep_res = smart_sleep(coder->table->args->time_to_debug, coder);
 	if (sleep_res)
 		return sleep_res;
-	printf("coder %d refactoring...\n", coder->number);
+	log_msg("Refactoring...", coder->table->log_mutex, coder->number);
 	sleep_res = smart_sleep(coder->table->args->time_to_refactor, coder);
 	if (sleep_res)
 		return sleep_res;

@@ -34,9 +34,6 @@ static int	coder_allocs(t_coder **new)
 	(*new)->self_mutex = gar_col(ALLOC, sizeof(pthread_mutex_t));
 	if (!(*new)->self_mutex)
 		return (-1);
-	(*new)->log_mutex = gar_col(ALLOC, sizeof(pthread_mutex_t));
-	if (!(*new)->log_mutex)
-		return (-1);
 	(*new)->condition = gar_col(ALLOC, sizeof(pthread_cond_t));
 	if (!(*new)->condition)
 		return (-1);
@@ -44,7 +41,6 @@ static int	coder_allocs(t_coder **new)
 	if (!(*new)->right_dongle)
 		return (-1);
 	pthread_mutex_init((*new)->self_mutex, NULL);
-	pthread_mutex_init((*new)->log_mutex, NULL);
 	pthread_mutex_init((*new)->right_dongle, NULL);
 	pthread_cond_init((*new)->condition, NULL);
 	return (0);
@@ -78,8 +74,12 @@ t_table	*init_table(t_args *prog_args)
 	table->table_mutex = gar_col(ALLOC, sizeof(pthread_mutex_t));
 	if (!table->table_mutex)
 		return (NULL);
+	table->log_mutex = gar_col(ALLOC, sizeof(pthread_mutex_t));
+	if (!table->log_mutex)
+		return (NULL);
 	table->condition = gar_col(ALLOC, sizeof(pthread_cond_t));
 	pthread_mutex_init(table->table_mutex, NULL);
+	pthread_mutex_init(table->log_mutex, NULL);
 	table->args = prog_args;
 	return table;
 }

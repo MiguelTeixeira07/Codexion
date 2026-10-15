@@ -21,7 +21,6 @@ struct s_table;
 typedef struct s_coder {
 	pthread_t		*thread;
 	pthread_mutex_t	*self_mutex;
-	pthread_mutex_t	*log_mutex;
 	pthread_cond_t	*condition;
 	int				number;
 	int				waiting;
@@ -40,6 +39,7 @@ typedef struct s_table {
 	t_coder			*first;
 	t_coder			*last;
 	pthread_mutex_t	*table_mutex;
+	pthread_mutex_t	*log_mutex;
 	pthread_cond_t	*condition;
 	int				finished;
 	int				result;

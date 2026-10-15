@@ -64,43 +64,47 @@ void	*monitor_routine(void *args)
 	usleep(1000000);
 	while (table->finished < table->args->num_coders)
 	{
+		log_msg("Monitor running.", table->log_mutex, 0);
 		pthread_mutex_lock(table->table_mutex);
 		if (table->result)
 		{
-			printf("This is not supposed to happen %d\n", table->result);
+			log_msg("This is not supposed to happen.", table->log_mutex, 0);
 			return (NULL);
 		}
 		i = 0;
 		curr_c = table->first;
+		log_msg("Deadlock?", table->log_mutex, 0);
 		while (++i <= table->args->num_coders)
 		{
 			if (curr_c->waiting)
 			{
-				pthread_mutex_lock(curr_c->self_mutex);
+				log_msg("Deadlock?1", table->log_mutex, 0);
 				queue_push(queue, curr_c, curr_c->table->args->scheduler);
-				curr_c->waiting = 0;
 				pthread_mutex_unlock(table->table_mutex);
 				pthread_cond_signal(curr_c->condition);
 				//printf("Monitor: Added coder %d to the queue\n", curr_c->number);
 				usleep(1000);
 				pthread_mutex_lock(table->table_mutex);
 				print_queue(queue);
-				pthread_mutex_unlock(curr_c->self_mutex);
 			}
 			curr_c = curr_c->next;
 		}
 		curr_q = queue->top;
+		log_msg("Deadlock?", table->log_mutex, 0);
 		while (curr_q)
 		{
 			if (!curr_q->coder->in_queue)
 			{
 				next = curr_q->next;
 				queue_remove(queue, curr_q);
+				print_queue(queue);
 				curr_q = next;
 				if (!curr_q)
 					break ;
 			}
-			pthread_mutex_lock(curr_q->coder->self_mutex);
+			log_msg("Deadlock?2c", table->log_mutex, 0);
+			pthread_mutex_lock(curr_q->coder->self_mutex); // Deadlock
+			log_msg("Deadlock?2", table->log_mutex, 0);
 			if (!curr_q->coder->next->compiling && !curr_q->coder->prev->compiling)
 			{
 				curr_q->n_compiles = curr_q->coder->compile_ammount;
@@ -112,10 +116,16 @@ void	*monitor_routine(void *args)
 			}
 			pthread_mutex_unlock(curr_q->coder->self_mutex);
 			curr_q = curr_q->next;
+			printf("%d\n", (curr_q ? curr_q->coder->number : -1));
+			log_msg("Deadlock?2a", table->log_mutex, 0);
 		}
+		log_msg("Deadlock?2b", table->log_mutex, 0);
 		pthread_mutex_unlock(table->table_mutex);
+		log_msg("Deadlock?2c", table->log_mutex, 0);
+		log_msg("Deadlock?3", table->log_mutex, 0);
 		usleep(10000);
 	}
+	log_msg("Monitor stopped running", table->log_mutex, 0);
 	return (NULL);
 }
 

@@ -21,7 +21,6 @@ void	*coder(void *coder_info)
 	pthread_mutex_lock(coder->self_mutex);
 	pthread_cond_wait(coder->table->condition, coder->self_mutex);
 	pthread_mutex_unlock(coder->self_mutex);
-	log_msg("I just woke up!", coder->log_mutex, coder->number);
 	while (1)
 		if (compile(coder) || debug_and_refactor(coder))
 			return (NULL);
