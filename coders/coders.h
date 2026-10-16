@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:08 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/14 17:53:54 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/16 21:05:42 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,14 @@
 
 struct s_table;
 
-typedef struct s_coder {
+typedef struct	s_dongle
+{
+	pthread_mutex_t	*dongle;
+	__time_t		last_used;
+}					t_dongle;
+
+typedef struct	s_coder 
+{
 	pthread_t		*thread;
 	pthread_mutex_t	*self_mutex;
 	pthread_cond_t	*condition;
@@ -27,25 +34,27 @@ typedef struct s_coder {
 	int				compiling;
 	int				in_queue;
 	int				compile_ammount;
+	int				has_finished;
 	__time_t		last_compile_start;
-	pthread_mutex_t	*left_dongle;
-	pthread_mutex_t	*right_dongle;
+	struct s_dongle	*left_dongle;
+	struct s_dongle	*right_dongle;
 	struct s_coder	*next;
 	struct s_coder	*prev;
 	struct s_table	*table;
-} t_coder;
+}					t_coder;
 
-typedef struct s_table {
+typedef struct	s_table
+{
 	t_coder			*first;
 	t_coder			*last;
 	pthread_mutex_t	*table_mutex;
 	pthread_mutex_t	*log_mutex;
 	pthread_cond_t	*condition;
 	int				finished;
-	int				result;
 	int				dead_coder;
+	__time_t		sim_start;
 	struct s_args	*args;
-} t_table;
+}					t_table;
 
 //actions.c
 int	compile(t_coder *args);

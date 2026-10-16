@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/06 22:18:44 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/14 17:07:28 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/16 21:14:08 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,16 @@ int	first_coder(t_table *self, t_coder *new)
 	return (0);
 }
 
+static t_dongle	*init_dongle(void)
+{
+	t_dongle	*dongle;
+
+	dongle = gar_col(ALLOC, sizeof(t_dongle));
+	if (!dongle)
+		return (NULL);
+	return (dongle);
+}
+
 static int	coder_allocs(t_coder **new)
 {
 	*new = gar_col(ALLOC, sizeof(t_coder));
@@ -37,11 +47,14 @@ static int	coder_allocs(t_coder **new)
 	(*new)->condition = gar_col(ALLOC, sizeof(pthread_cond_t));
 	if (!(*new)->condition)
 		return (-1);
-	(*new)->right_dongle = gar_col(ALLOC, sizeof(pthread_mutex_t));
+	(*new)->right_dongle = init_dongle();
 	if (!(*new)->right_dongle)
 		return (-1);
+	(*new)->right_dongle->dongle = gar_col(ALLOC, sizeof(pthread_mutex_t));
+	if (!(*new)->right_dongle->dongle)
+		return (-1);
 	pthread_mutex_init((*new)->self_mutex, NULL);
-	pthread_mutex_init((*new)->right_dongle, NULL);
+	pthread_mutex_init((*new)->right_dongle->dongle, NULL);
 	pthread_cond_init((*new)->condition, NULL);
 	return (0);
 }
@@ -57,6 +70,7 @@ int	init_coder(t_table *table, t_coder **new, int coder)
 	(*new)->compiling = 0;
 	(*new)->table = table;
 	(*new)->in_queue = 0;
+	(*new)->has_finished = 0;
 	return (0);
 }
 
@@ -69,7 +83,6 @@ t_table	*init_table(t_args *prog_args)
 		return (NULL);
 	table->first = NULL;
 	table->last = NULL;
-	table->result = 0;
 	table->dead_coder = 0;
 	table->table_mutex = gar_col(ALLOC, sizeof(pthread_mutex_t));
 	if (!table->table_mutex)
@@ -78,8 +91,11 @@ t_table	*init_table(t_args *prog_args)
 	if (!table->log_mutex)
 		return (NULL);
 	table->condition = gar_col(ALLOC, sizeof(pthread_cond_t));
+	if (!table->condition)
+		return (NULL);
 	pthread_mutex_init(table->table_mutex, NULL);
 	pthread_mutex_init(table->log_mutex, NULL);
+	pthread_cond_init(table->condition, NULL);
 	table->args = prog_args;
 	return table;
 }

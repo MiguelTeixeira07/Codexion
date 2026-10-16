@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   queue.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:56 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/07 23:15:13 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/16 18:13:31 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_queue
 
 t_queue	*init_queue();
 void	queue_push(t_queue *self, struct s_coder *coder, char *scheduler);
-void	queue_remove(t_queue *self, t_node *coder);
+t_node	*queue_remove(t_queue *self, t_node *coder);
 void	print_queue(t_queue *self);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/30 19:05:11 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/12 18:25:12 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/16 18:14:48 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,17 @@ void	print_queue(t_queue *self)
 	printf("| Back\n");
 }
 
-void	queue_remove(t_queue *self, t_node *target)
+t_node	*queue_remove(t_queue *self, t_node *target)
 {
 	t_node	*remove;
+	t_node	*out;
 
+	out = target->next;
 	if (self->top == self->bottom)
 	{
 		self->top = NULL;
 		self->bottom = NULL;
-		return ;
+		return (NULL);
 	}
 	remove = target;
 	if (!remove->next)
@@ -61,4 +63,5 @@ void	queue_remove(t_queue *self, t_node *target)
 	else
 		remove->previous->next = remove->next;
 	remove = NULL;
+	return (out);
 }
