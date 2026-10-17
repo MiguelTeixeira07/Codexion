@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   coders.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:10 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/16 21:09:37 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/17 22:25:17 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
-
 
 void	*coder(void *coder_info)
 {
@@ -23,7 +22,16 @@ void	*coder(void *coder_info)
 	pthread_mutex_unlock(coder->table->table_mutex);
 	while (1)
 		if (compile(coder) || debug_and_refactor(coder))
-			return (NULL);
+			break ;
+	pthread_mutex_lock(coder->self_mutex);
+	coder->waiting = 0;
+	coder->compiling = 0;
+	coder->in_queue = 0;
+	coder->has_finished = 1;
+	pthread_mutex_unlock(coder->self_mutex);
+	pthread_mutex_lock(coder->table->table_mutex);
+	coder->table->terminated_coders++;
+	pthread_mutex_unlock(coder->table->table_mutex);
 	return (NULL);
 }
 
@@ -51,7 +59,6 @@ int	create_threads(t_table *table, pthread_t *monitor) {
 	}
 	curr = table->first;
 	i = 0;
-	printf("Sim started\n");
 	usleep(1000000);
 	wake_em_up(table);
 	pthread_join(*monitor, NULL);

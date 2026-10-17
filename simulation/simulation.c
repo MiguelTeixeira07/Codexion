@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/16 22:18:40 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/17 22:14:33 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,13 @@ int	check_end(t_table *table, t_coder *coder)
 {
 	__time_t	now;
 
-	if (table->finished == table->args->num_coders || table->dead_coder) // data race
+	pthread_mutex_lock(table->table_mutex);
+	if (table->finished == table->args->num_coders || table->dead_coder)
+	{
+		pthread_mutex_unlock(table->table_mutex);
 		return (1);
+	}
+	pthread_mutex_unlock(table->table_mutex);
 	if (!coder)
 		return (0);
 	pthread_mutex_lock(coder->self_mutex);
@@ -32,8 +37,10 @@ int	check_end(t_table *table, t_coder *coder)
 	if (now - coder->last_compile_start >= table->args->time_to_burnout)
 	{
 		log_msg("burned out", table, coder->number);
-		table->dead_coder = 1; // data race
 		pthread_mutex_unlock(coder->self_mutex);
+		pthread_mutex_lock(table->table_mutex);
+		table->dead_coder = 1;
+		pthread_mutex_unlock(table->table_mutex);
 		return (1);
 	}
 	pthread_mutex_unlock(coder->self_mutex);
@@ -44,24 +51,25 @@ void	*monitor_routine(void *args)
 {
 	t_queue			*queue;
 	t_table			*table;
+	int				can_terminate;
 
 	table = (t_table *)args;
+	can_terminate = 0;
 	wait_for_start(table);
 	queue = gar_col(ALLOC, sizeof(t_queue));
+	pthread_mutex_lock(table->table_mutex);
 	table->sim_start = gettime();
-	while (table->finished < table->args->num_coders)
+	pthread_mutex_unlock(table->table_mutex);
+	while (!check_end(table, NULL) || !can_terminate)
 	{
 		pthread_mutex_lock(table->table_mutex);
-		if (check_end(table, NULL))
-		{
-			log_msg("Simulation ended, Monitor stopping", table, 0);
-			return (NULL);
-		}
+		can_terminate = table->terminated_coders == table->args->num_coders;
 		update_queue(queue, table);
 		allow_compiles(queue);
 		pthread_mutex_unlock(table->table_mutex);
-		usleep(10000);
+		usleep(100);
 	}
+	log_msg("Simulation ended, Monitor stopping", table, 0);
 	return (NULL);
 }
 

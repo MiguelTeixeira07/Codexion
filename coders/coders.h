@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:08 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/16 21:05:42 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/17 22:12:45 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct	s_table
 	pthread_cond_t	*condition;
 	int				finished;
 	int				dead_coder;
+	int				terminated_coders;
 	__time_t		sim_start;
 	struct s_args	*args;
 }					t_table;

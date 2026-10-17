@@ -15,12 +15,12 @@ NAME = codexion
 PARGS = 
 
 NUM_CODERS		= 3
-TT_BURNOUT		= 5000
+TT_BURNOUT		= 6000
 TT_COMPILE		= 2000
 TT_DEBUG		= 500
 TT_REFACTOR		= 500
 MIN_COMPILE		= 5
-DONGLE_CD		= 1000
+DONGLE_CD		= 1
 SCHED			= fifo
 
 ARGS = $(NUM_CODERS) $(TT_BURNOUT) $(TT_COMPILE) $(TT_DEBUG) $(TT_REFACTOR) $(MIN_COMPILE) $(DONGLE_CD) $(SCHED)
@@ -43,7 +43,7 @@ run: # $(NAME)
 	./$(NAME) $(ARGS)
 
 valg: # $(NAME)
-	valgrind --tool=helgrind ./$(NAME) $(ARGS)
+	valgrind --tool=helgrind -s ./$(NAME) $(ARGS)
 
 gdb:
 	gdb --tui --args ./$(NAME) $(ARGS) 

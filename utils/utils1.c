@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:57:03 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/16 19:58:55 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/17 21:34:16 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	log_msg(char *str, t_table *table, int coder_num)
 		return ;
 	pthread_mutex_lock(table->log_mutex);
 	now = gettime();
-	printf("%ld %d %s\n", now - table->sim_start, coder_num, str);
+	printf("%ld %d %s\n", now - table->sim_start, coder_num, str); // data race
 	pthread_mutex_unlock(table->log_mutex);
 }
 

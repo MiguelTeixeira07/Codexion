@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:52 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/14 17:03:24 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/17 21:10:49 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static void	queue_fifo_push(t_queue *self, t_coder *coder)
 		return ;
 	new->coder = coder;
 	new->next = NULL;
+	new->previous = self->bottom;
 	if (!self->top)
 		self->top = new;
 	else

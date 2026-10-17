@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   queue_functions2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/30 19:05:11 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/16 18:14:48 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/17 20:59:10 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,20 @@ void	print_queue(t_queue *self)
 
 t_node	*queue_remove(t_queue *self, t_node *target)
 {
-	t_node	*remove;
 	t_node	*out;
 
-	out = target->next;
-	if (self->top == self->bottom)
-	{
-		self->top = NULL;
-		self->bottom = NULL;
+	if (!self || !target)
 		return (NULL);
-	}
-	remove = target;
-	if (!remove->next)
-		self->bottom = remove->previous;
-	else if (!remove->previous)
-		self->top = remove->next;
-	else
-		remove->previous->next = remove->next;
-	remove = NULL;
+	out = target->next;
+	if (target == self->top)
+		self->top = target->next;
+	if (target == self->bottom)
+		self->bottom = target->previous;
+	if (target->previous)
+		target->previous->next = target->next;
+	if (target->next)
+		target->next->previous = target->previous;
+	target->next = NULL;
+	target->previous = NULL;
 	return (out);
 }
