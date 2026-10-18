@@ -1,0 +1,67 @@
+./codexion 7 6000 2000 500 500 5 1 edf
+Front | 1 | Back
+Front | 1 2 | Back
+Front | 1 2 3 | Back
+Front | 1 2 3 4 | Back
+Front | 1 2 3 4 5 | Back
+Front | 1 2 3 4 5 6 | Back
+Front | 1 2 3 4 5 6 7 | Back
+2 1 has taken a dongle
+2 1 has taken a dongle
+2 1 is compiling
+Front | 2 3 4 5 6 7 | Back
+2 3 has taken a dongle
+2 3 has taken a dongle
+2 3 is compiling
+2 5 has taken a dongle
+2 5 has taken a dongle
+2 5 is compiling
+Front | 2 3 4 6 7 | Back
+Front | 2 4 6 7 | Back
+2002 3 Debugging...
+2002 5 Debugging...
+2002 1 Debugging...
+2002 6 has taken a dongle
+2004 4 has taken a dongle
+2004 4 has taken a dongle
+2004 4 is compiling
+2004 6 has taken a dongle
+2004 6 is compiling
+Front | 2 6 7 | Back
+2004 2 has taken a dongle
+2004 2 has taken a dongle
+2004 2 is compiling
+Front | 6 7 | Back
+Front | 7 | Back
+2502 5 Refactoring...
+2502 3 Refactoring...
+2502 1 Refactoring...
+Front | 7 3 | Back
+Front | 7 3 5 | Back
+Front | 7 3 5 1 | Back
+4004 2 Debugging...
+4004 1 has taken a dongle
+4004 4 Debugging...
+4005 6 Debugging...
+4006 3 has taken a dongle
+4006 3 has taken a dongle
+4006 3 is compiling
+Front | 7 5 1 | Back
+4006 1 has taken a dongle
+4006 1 is compiling
+4006 5 has taken a dongle
+Front | 7 5 | Back
+4007 5 has taken a dongle
+4007 5 is compiling
+Front | 7 | Back
+4504 4 Refactoring...
+4504 2 Refactoring...
+4505 6 Refactoring...
+Front | 7 4 | Back
+Front | 7 4 2 | Back
+Front | 7 4 2 6 | Back
+6006 1 Debugging...
+6006 7 burned out
+Front | 4 2 6 | Back
+Front | 4 2 | Back
+Front | 2 | Back

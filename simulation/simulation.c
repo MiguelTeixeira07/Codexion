@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/17 22:14:33 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/18 00:52:01 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void	*monitor_routine(void *args)
 		pthread_mutex_unlock(table->table_mutex);
 		usleep(100);
 	}
-	log_msg("Simulation ended, Monitor stopping", table, 0);
 	return (NULL);
 }
 

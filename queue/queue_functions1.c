@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:52 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/17 21:10:49 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/18 01:25:41 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,52 +29,39 @@ static void	queue_fifo_push(t_queue *self, t_coder *coder)
 	self->bottom = new;
 }
 
-/* static void	insert_first(t_queue *self, t_node *new)
+static void	swap_with_previous(t_queue *queue, t_node *node)
 {
-	new->previous = self->bottom;
-	if (self->bottom)
-		self->bottom->next = new;
-	else
-	{
-		self->top = new;
-		self->bottom = new;
-	}
-}
+	t_node	*prev;
+	t_node	*before_prev;
+	t_node	*next;
 
-static void	queue_edf_push(t_queue *self, t_coder *coder)
-{
-	t_node	*new;
-	t_node	*curr;
-	
-	new = gar_col(ALLOC, sizeof(t_node));
-	if(!new)
-		return;
-	new->coder = coder;
-	new->n_compiles = coder->compile_ammount;
-	new->next = NULL;
-	new->previous = NULL;
-	curr->next = self->top;
-	//while (curr && curr->coder->deadline <= coder->deadline)
-	//	curr = curr->next;
-	if (!curr)
-		insert_first(self, new);
-	else
-	{
-		new->next = curr;
-		new->previous = curr->previous;
-		if (curr->previous)
-		curr->previous->next = new;
-		else
-		self->top = new;
-		curr->previous = new;
-	}
-} */
+	prev = node->previous;
+	before_prev = prev->previous;
+	next = node->next;
+    if (!queue->top || !node || !node->previous)
+        return ;
+    if (before_prev)
+        before_prev->next = node;
+    else
+        queue->top = node;
+    node->previous = before_prev;
+    node->next = prev;
+    prev->previous = node;
+    prev->next = next;
+    if (next)
+        next->previous = prev;
+}
 
 void	queue_push(t_queue *self, t_coder *coder, char *scheduler)
 {
-	(void)scheduler;
-	//if (strcmp(scheduler, "fifo"))
+	t_node	*curr;
+
+	curr = self->bottom;
 	queue_fifo_push(self, coder);
-	/*else
-		queue_edf_push(self, coder);*/
+	if (strcmp(scheduler, "edf"))
+		while (curr && curr->previous && curr->previous->coder->last_compile_start > curr->coder->last_compile_start)
+		{
+			swap_with_previous(self, curr);
+			curr = curr->previous;
+		}
 }
