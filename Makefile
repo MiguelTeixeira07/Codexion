@@ -14,7 +14,7 @@ NAME = codexion
 
 PARGS = 
 
-NUM_CODERS		= 7
+NUM_CODERS		= 5
 TT_BURNOUT		= 6000
 TT_COMPILE		= 2000
 TT_DEBUG		= 500
@@ -43,7 +43,7 @@ run: # $(NAME)
 	./$(NAME) $(ARGS)
 
 valg: # $(NAME)
-	valgrind --tool=helgrind -s ./$(NAME) $(ARGS)
+	valgrind --tool=helgrind ./$(NAME) $(ARGS)
 
 gdb:
 	gdb --tui --args ./$(NAME) $(ARGS) 
