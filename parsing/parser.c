@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/18 15:53:53 by migteixe          #+#    #+#             */
-/*   Updated: 2026/09/30 19:15:03 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/19 18:54:08 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	parse(char **args, t_args *output)
 			return (1);
 		i++;
 	}
-	if (!strcmp(args[i], "fifo") && !strcmp(args[i], "edf"))
+	if (strcmp(args[i], "fifo") && strcmp(args[i], "edf"))
 		return (1);
 	assign_vals(vals, output);
 	output->scheduler = args[i];

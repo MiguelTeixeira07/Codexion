@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/18 02:45:26 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/19 18:39:00 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	check_end(t_table *table, t_coder *coder)
 	pthread_mutex_unlock(table->table_mutex);
 	if (!coder)
 		return (0);
+	pthread_mutex_lock(table->table_mutex);
 	pthread_mutex_lock(coder->self_mutex);
 	if (coder->compile_ammount >= table->args->num_compiles && !coder->has_finished)
 	{
@@ -38,12 +39,12 @@ int	check_end(t_table *table, t_coder *coder)
 	{
 		log_msg("burned out", table, coder->number);
 		pthread_mutex_unlock(coder->self_mutex);
-		pthread_mutex_lock(table->table_mutex);
 		table->dead_coder = 1;
 		pthread_mutex_unlock(table->table_mutex);
 		return (1);
 	}
 	pthread_mutex_unlock(coder->self_mutex);
+	pthread_mutex_unlock(table->table_mutex);
 	return (0);
 }
 
@@ -52,6 +53,7 @@ void	*monitor_routine(void *args)
 	t_queue			*queue;
 	t_table			*table;
 	int				can_terminate;
+	int				end;
 
 	table = (t_table *)args;
 	can_terminate = 0;
@@ -63,12 +65,16 @@ void	*monitor_routine(void *args)
 	pthread_mutex_unlock(table->table_mutex);
 	while (!check_end(table, NULL) || !can_terminate)
 	{
+		end = check_end(table, NULL);
 		pthread_mutex_lock(table->table_mutex);
 		can_terminate = table->terminated_coders == table->args->num_coders;
-		allow_compiles(queue);
-		update_queue(queue, table);
+		if (table->coders_compiling == 0 || end)
+		{
+			allow_compiles(queue);
+			update_queue(queue, table);
+		}
 		pthread_mutex_unlock(table->table_mutex);
-		usleep(table->args->time_to_compile);
+		usleep(100);
 	}
 	return (NULL);
 }

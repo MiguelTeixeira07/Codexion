@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:30 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/17 22:01:31 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/19 18:16:17 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,16 @@ int	compile(t_coder *coder)
 	pthread_mutex_lock(coder->self_mutex);
 	coder->compiling = 1;
 	pthread_mutex_unlock(coder->self_mutex);
+	pthread_mutex_lock(coder->table->table_mutex);
+	coder->table->coders_compiling++;
+	pthread_mutex_unlock(coder->table->table_mutex);
 	if (take_dongles(coder))
 		return (1);
+	log_msg("is compiling", coder->table, coder->number);
 	pthread_mutex_lock(coder->self_mutex);
 	coder->last_compile_start = gettime();
 	coder->in_queue = 0;
 	coder->compile_ammount++;
-	log_msg("is compiling", coder->table, coder->number);
 	if (smart_sleep(coder->table->args->time_to_compile, coder))
 		return (1);
 	coder->compiling = 0;
@@ -102,6 +105,9 @@ int	compile(t_coder *coder)
 	coder->left_dongle->last_used = gettime();
 	pthread_mutex_unlock(coder->left_dongle->dongle);
 	pthread_mutex_unlock(coder->self_mutex);
+	pthread_mutex_lock(coder->table->table_mutex);
+	coder->table->coders_compiling--;
+	pthread_mutex_unlock(coder->table->table_mutex);
 	return (0);
 }
 
@@ -109,12 +115,14 @@ int	debug_and_refactor(t_coder *coder)
 {
 	int	sleep_res;
 
-	pthread_mutex_lock(coder->self_mutex);
 	log_msg("Debugging...", coder->table, coder->number);
+	pthread_mutex_lock(coder->self_mutex);
 	sleep_res = smart_sleep(coder->table->args->time_to_debug, coder);
 	if (sleep_res)
 		return sleep_res;
+	pthread_mutex_unlock(coder->self_mutex);
 	log_msg("Refactoring...", coder->table, coder->number);
+	pthread_mutex_lock(coder->self_mutex);
 	sleep_res = smart_sleep(coder->table->args->time_to_refactor, coder);
 	if (sleep_res)
 		return sleep_res;
