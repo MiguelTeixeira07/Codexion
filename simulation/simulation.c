@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/19 18:39:00 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/19 20:36:00 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,10 @@ int	check_end(t_table *table, t_coder *coder)
 	now = gettime() - table->sim_start;
 	if (now - coder->last_compile_start >= table->args->time_to_burnout)
 	{
-		log_msg("burned out", table, coder->number);
 		pthread_mutex_unlock(coder->self_mutex);
+		pthread_mutex_unlock(table->table_mutex);
+		log_msg("burned out", table, coder->number);
+		pthread_mutex_lock(table->table_mutex);
 		table->dead_coder = 1;
 		pthread_mutex_unlock(table->table_mutex);
 		return (1);

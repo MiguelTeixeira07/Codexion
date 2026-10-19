@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitor_helpers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/16 17:07:27 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/18 02:53:41 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/19 21:13:32 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

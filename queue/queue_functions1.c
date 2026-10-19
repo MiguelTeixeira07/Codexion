@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   queue_functions1.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:52 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/18 01:25:41 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/19 19:52:06 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

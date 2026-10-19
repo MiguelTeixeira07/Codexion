@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:30 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/19 18:16:17 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/19 21:14:33 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,22 @@ static int	smart_sleep(long duration_ms, t_coder *coder)
 
 static void	wait_in_list(t_coder *coder)
 {
+	struct timespec	abstime;
+
 	pthread_mutex_lock(coder->table->table_mutex);
 	coder->waiting = 1;
-	// log_msg("Waiting to be added to the queue...", coder->table, coder->number);
 	pthread_cond_wait(coder->condition, coder->table->table_mutex);
 	coder->waiting = 0;
-	// log_msg("I was added to the queue", coder->table, coder->number);
 	coder->in_queue = 1;
 	pthread_mutex_unlock(coder->table->table_mutex);
-	// log_msg("Locking self mutex", coder->table, coder->number);
 	pthread_mutex_lock(coder->self_mutex);
-	// log_msg("Waiting to compile...", coder->table, coder->number);
-	pthread_cond_wait(coder->condition, coder->self_mutex);
-	// log_msg("Got permission to compile", coder->table, coder->number);
+	while (1)
+	{
+		clock_gettime(CLOCK_REALTIME, &abstime);
+		abstime.tv_nsec += 5000000;
+		if (!pthread_cond_timedwait(coder->condition, coder->self_mutex, &abstime) || !check_end(coder->table, coder))
+			break ;
+	}
 	pthread_mutex_unlock(coder->self_mutex);
 }
 
@@ -67,7 +70,7 @@ static int	take_dongles(t_coder *coder)
 			lflag = 1;
 			log_msg("has taken a dongle", coder->table, coder->number);
 		}
-		if (coder->right_dongle->last_used + coder->table->args->dongle_cooldown < gettime() && !rflag)
+		if (coder->right_dongle->last_used + coder->table->args->dongle_cooldown < gettime() && !rflag && coder->table->args->num_coders != 1)
 		{
 			rflag = 1;
 			log_msg("has taken a dongle", coder->table, coder->number);
@@ -94,10 +97,10 @@ int	compile(t_coder *coder)
 	pthread_mutex_lock(coder->self_mutex);
 	coder->last_compile_start = gettime();
 	coder->in_queue = 0;
-	coder->compile_ammount++;
 	if (smart_sleep(coder->table->args->time_to_compile, coder))
 		return (1);
 	coder->compiling = 0;
+	coder->compile_ammount++;
 	pthread_mutex_lock(coder->right_dongle->dongle);
 	coder->right_dongle->last_used = gettime();
 	pthread_mutex_unlock(coder->right_dongle->dongle);
