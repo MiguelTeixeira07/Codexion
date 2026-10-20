@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/30 19:16:41 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/13 00:20:49 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/20 23:55:51 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*ft_itoa(int n)
 
 	nb = n;
 	size = outsize(n);
-	out = malloc(size + 1);
+	out = gar_col(ALLOC, size + 1);
 	if (!out)
 		return (NULL);
 	out[size] = '\0';
