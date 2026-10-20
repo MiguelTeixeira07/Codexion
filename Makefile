@@ -14,13 +14,13 @@ NAME = codexion
 
 PARGS = 
 
-NUM_CODERS		= 2
-TT_BURNOUT		= 1550
-TT_COMPILE		= 1000
-TT_DEBUG		= 500
-TT_REFACTOR		= 500
+NUM_CODERS		= 199
+TT_BURNOUT		= 300
+TT_COMPILE		= 60
+TT_DEBUG		= 60
+TT_REFACTOR		= 60
 MIN_COMPILE		= 5
-DONGLE_CD		= 500
+DONGLE_CD		= 60
 SCHED			= edf
 
 ARGS = $(NUM_CODERS) $(TT_BURNOUT) $(TT_COMPILE) $(TT_DEBUG) $(TT_REFACTOR) $(MIN_COMPILE) $(DONGLE_CD) $(SCHED)
@@ -42,7 +42,10 @@ debug: fclean $(OBJS)
 run: # $(NAME)
 	./$(NAME) $(ARGS)
 
-valg: # $(NAME)
+valg: 
+	valgrind ./$(NAME) $(ARGS)
+
+helg: # $(NAME)
 	valgrind --tool=helgrind ./$(NAME) $(ARGS)
 
 gdb:

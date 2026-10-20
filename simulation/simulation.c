@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/20 16:42:51 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/21 00:05:36 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	*monitor_routine(void *args)
 			update_queue(queue, table);
 		}
 		pthread_mutex_unlock(table->table_mutex);
-		usleep(100);
+		usleep(25);
 	}
 	return (NULL);
 }

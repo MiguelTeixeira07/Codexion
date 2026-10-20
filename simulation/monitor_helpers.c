@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/16 17:07:27 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/20 17:29:18 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/21 00:15:22 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	update_queue(t_queue *queue, t_table *table)
 			queue_push(queue, curr, curr->table->args->scheduler);
 			pthread_cond_signal(curr->condition);
 			pthread_mutex_unlock(table->table_mutex);
-			usleep(100);
+			usleep(50);
 			pthread_mutex_lock(table->table_mutex);
 		}
 		curr = curr->next;
@@ -67,7 +67,7 @@ void	allow_compiles(t_queue *queue)
 			curr_q->n_compiles = curr_q->coder->compile_ammount;
 			pthread_cond_signal(curr_q->coder->condition);
 			pthread_mutex_unlock(curr_q->coder->self_mutex);
-			usleep(100);
+			usleep(50);
 			curr_q = curr_q->next;
 			continue ;
 		}
