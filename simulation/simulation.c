@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/19 20:36:00 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/20 16:42:51 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,14 @@
 #include <pthread.h>
 
 
-int	check_end(t_table *table, t_coder *coder)
+int	check_end(t_table *table)
 {
-	__time_t	now;
-
 	pthread_mutex_lock(table->table_mutex);
 	if (table->finished == table->args->num_coders || table->dead_coder)
 	{
 		pthread_mutex_unlock(table->table_mutex);
 		return (1);
 	}
-	pthread_mutex_unlock(table->table_mutex);
-	if (!coder)
-		return (0);
-	pthread_mutex_lock(table->table_mutex);
-	pthread_mutex_lock(coder->self_mutex);
-	if (coder->compile_ammount >= table->args->num_compiles && !coder->has_finished)
-	{
-		coder->has_finished = 1;
-		table->finished++;
-	}
-	now = gettime() - table->sim_start;
-	if (now - coder->last_compile_start >= table->args->time_to_burnout)
-	{
-		pthread_mutex_unlock(coder->self_mutex);
-		pthread_mutex_unlock(table->table_mutex);
-		log_msg("burned out", table, coder->number);
-		pthread_mutex_lock(table->table_mutex);
-		table->dead_coder = 1;
-		pthread_mutex_unlock(table->table_mutex);
-		return (1);
-	}
-	pthread_mutex_unlock(coder->self_mutex);
 	pthread_mutex_unlock(table->table_mutex);
 	return (0);
 }
@@ -65,9 +41,10 @@ void	*monitor_routine(void *args)
 	update_queue(queue, table);
 	table->sim_start = gettime();
 	pthread_mutex_unlock(table->table_mutex);
-	while (!check_end(table, NULL) || !can_terminate)
+	while (!check_end(table) || !can_terminate)
 	{
-		end = check_end(table, NULL);
+		update_end(table);
+		end = check_end(table);
 		pthread_mutex_lock(table->table_mutex);
 		can_terminate = table->terminated_coders == table->args->num_coders;
 		if (table->coders_compiling == 0 || end)

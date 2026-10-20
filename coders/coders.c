@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:10 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/19 20:14:35 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/20 16:42:21 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	*coder(void *coder_info)
 	pthread_cond_wait(coder->table->condition, coder->table->table_mutex);
 	pthread_mutex_unlock(coder->table->table_mutex);
 	while (1)
-		if (compile(coder) || check_end(coder->table, coder) || debug_and_refactor(coder))
+		if (compile(coder) || check_end(coder->table) || debug_and_refactor(coder))
 			break ;
 	pthread_mutex_lock(coder->self_mutex);
 	coder->waiting = 0;

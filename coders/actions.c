@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:30 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/19 21:14:33 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/20 18:46:44 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	smart_sleep(long duration_ms, t_coder *coder)
 	pthread_mutex_unlock(coder->self_mutex);
 	while (1)
 	{
-		if (check_end(coder->table, coder))
+		if (check_end(coder->table))
 			return (1);
 		now = gettime();
 		if (now - start >= duration_ms)
@@ -43,13 +43,21 @@ static void	wait_in_list(t_coder *coder)
 	coder->waiting = 0;
 	coder->in_queue = 1;
 	pthread_mutex_unlock(coder->table->table_mutex);
-	pthread_mutex_lock(coder->self_mutex);
 	while (1)
 	{
 		clock_gettime(CLOCK_REALTIME, &abstime);
 		abstime.tv_nsec += 5000000;
-		if (!pthread_cond_timedwait(coder->condition, coder->self_mutex, &abstime) || !check_end(coder->table, coder))
+		if (abstime.tv_nsec >= 1000000000)
+		{
+			abstime.tv_sec++;
+			abstime.tv_nsec -= 1000000000;
+		}
+		pthread_mutex_lock(coder->self_mutex);
+		if (!pthread_cond_timedwait(coder->condition, coder->self_mutex, &abstime))
 			break ;
+		pthread_mutex_unlock(coder->self_mutex);
+		if (check_end(coder->table))
+			return ;
 	}
 	pthread_mutex_unlock(coder->self_mutex);
 }
@@ -63,7 +71,7 @@ static int	take_dongles(t_coder *coder)
 	rflag = 0;
 	while (1)
 	{
-		if (check_end(coder->table, coder))
+		if (check_end(coder->table))
 			return (1);
 		if (coder->left_dongle->last_used + coder->table->args->dongle_cooldown < gettime() && !lflag)
 		{
@@ -118,13 +126,14 @@ int	debug_and_refactor(t_coder *coder)
 {
 	int	sleep_res;
 
-	log_msg("Debugging...", coder->table, coder->number);
+	usleep(100);
+	log_msg("is debugging", coder->table, coder->number);
 	pthread_mutex_lock(coder->self_mutex);
 	sleep_res = smart_sleep(coder->table->args->time_to_debug, coder);
 	if (sleep_res)
 		return sleep_res;
 	pthread_mutex_unlock(coder->self_mutex);
-	log_msg("Refactoring...", coder->table, coder->number);
+	log_msg("is refactoring", coder->table, coder->number);
 	pthread_mutex_lock(coder->self_mutex);
 	sleep_res = smart_sleep(coder->table->args->time_to_refactor, coder);
 	if (sleep_res)

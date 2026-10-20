@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitor_helpers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/16 17:07:27 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/19 21:13:32 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/20 17:29:18 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,38 @@ void	allow_compiles(t_queue *queue)
 		pthread_mutex_unlock(curr_q->coder->self_mutex);
 		curr_q = curr_q->next;
 	}
+}
+
+void	update_end(t_table *table)
+{
+	__time_t	now;
+	t_coder		*coder;
+	int			i;
+
+	coder = table->first;
+	i = 0;
+	pthread_mutex_lock(table->table_mutex);
+	while (++i <= table->args->num_coders)
+	{
+		pthread_mutex_lock(coder->self_mutex);
+		if (coder->compile_ammount >= table->args->num_compiles && !coder->has_finished)
+		{
+			coder->has_finished = 1;
+			table->finished++;
+		}
+		now = gettime() - table->sim_start;
+		if (now - coder->last_compile_start >= table->args->time_to_burnout)
+		{
+			pthread_mutex_unlock(coder->self_mutex);
+			pthread_mutex_unlock(table->table_mutex);
+			log_msg("burned out", table, coder->number);
+			table->dead_coder = 1;
+			return ;
+		}
+		pthread_mutex_unlock(coder->self_mutex);
+		coder = coder->next;
+	}
+	pthread_mutex_unlock(table->table_mutex);
 }
 
 void	wait_for_start(t_table *table)
