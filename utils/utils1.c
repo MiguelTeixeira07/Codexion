@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:57:03 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/19 18:39:48 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/23 17:17:17 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,13 @@ void	log_msg(char *str, t_table *table, int coder_num)
 	__time_t	now;
 
 	pthread_mutex_lock(table->table_mutex);
-	if (table->finished == table->args->num_coders || table->dead_coder)
+	if (!(table->finished == table->args->num_coders || table->dead_coder))
 	{
-		pthread_mutex_unlock(table->table_mutex);
-		return ;
+		pthread_mutex_lock(table->log_mutex);
+		now = gettime();
+		printf("%ld %d %s\n", now - table->sim_start, coder_num, str);
+		pthread_mutex_unlock(table->log_mutex);
 	}
 	pthread_mutex_unlock(table->table_mutex);
-	pthread_mutex_lock(table->log_mutex);
-	now = gettime();
-	printf("%ld %d %s\n", now - table->sim_start, coder_num, str);
-	pthread_mutex_unlock(table->log_mutex);
 }
 

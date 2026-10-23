@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/21 00:05:36 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/23 17:04:58 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 int	check_end(t_table *table)
 {
 	pthread_mutex_lock(table->table_mutex);
-	if (table->finished == table->args->num_coders || table->dead_coder)
+	if (table->finished >= table->args->num_coders || table->dead_coder)
 	{
 		pthread_mutex_unlock(table->table_mutex);
 		return (1);

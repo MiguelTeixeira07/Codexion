@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:30 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/20 18:46:44 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/23 18:25:31 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	smart_sleep(long duration_ms, t_coder *coder)
 		now = gettime();
 		if (now - start >= duration_ms)
 			break ;
-		usleep(1000);
+		//usleep(500);
 	}
 	pthread_mutex_lock(coder->self_mutex);
 	return (0);
@@ -35,7 +35,7 @@ static int	smart_sleep(long duration_ms, t_coder *coder)
 
 static void	wait_in_list(t_coder *coder)
 {
-	struct timespec	abstime;
+	//struct timespec	abstime;
 
 	pthread_mutex_lock(coder->table->table_mutex);
 	coder->waiting = 1;
@@ -43,22 +43,8 @@ static void	wait_in_list(t_coder *coder)
 	coder->waiting = 0;
 	coder->in_queue = 1;
 	pthread_mutex_unlock(coder->table->table_mutex);
-	while (1)
-	{
-		clock_gettime(CLOCK_REALTIME, &abstime);
-		abstime.tv_nsec += 5000000;
-		if (abstime.tv_nsec >= 1000000000)
-		{
-			abstime.tv_sec++;
-			abstime.tv_nsec -= 1000000000;
-		}
-		pthread_mutex_lock(coder->self_mutex);
-		if (!pthread_cond_timedwait(coder->condition, coder->self_mutex, &abstime))
-			break ;
-		pthread_mutex_unlock(coder->self_mutex);
-		if (check_end(coder->table))
-			return ;
-	}
+	pthread_mutex_lock(coder->self_mutex);
+	pthread_cond_wait(coder->condition, coder->self_mutex);
 	pthread_mutex_unlock(coder->self_mutex);
 }
 
@@ -85,7 +71,7 @@ static int	take_dongles(t_coder *coder)
 		}
 		if (lflag && rflag)
 			break ;
-		usleep(1000);
+		//usleep(500);
 	}
 	return (0);
 }

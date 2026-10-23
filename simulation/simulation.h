@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 16:22:03 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/20 16:42:49 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/23 17:02:16 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
