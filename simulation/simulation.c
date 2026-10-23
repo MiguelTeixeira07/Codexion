@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/23 17:04:58 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/23 19:27:51 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,19 +41,19 @@ void	*monitor_routine(void *args)
 	update_queue(queue, table);
 	table->sim_start = gettime();
 	pthread_mutex_unlock(table->table_mutex);
-	while (!check_end(table) || !can_terminate)
+	while (!can_terminate)
 	{
 		update_end(table);
 		end = check_end(table);
 		pthread_mutex_lock(table->table_mutex);
 		can_terminate = table->terminated_coders == table->args->num_coders;
-		if (table->coders_compiling == 0 || end)
+		if (table->coders_compiling < 1 || end)
 		{
 			allow_compiles(queue);
 			update_queue(queue, table);
 		}
 		pthread_mutex_unlock(table->table_mutex);
-		usleep(25);
+		usleep(1000);
 	}
 	return (NULL);
 }
