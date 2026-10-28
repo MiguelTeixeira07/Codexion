@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/16 17:07:27 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/27 18:44:28 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/28 21:37:11 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	update_end(t_table *table)
 			coder->has_finished = 1;
 			table->finished++;
 		}
-		if (gettime() - table->sim_start - coder->last_compile_start
+		if (gettime() - coder->last_compile_start
 			>= table->args->time_to_burnout)
 		{
 			burn_out(coder);

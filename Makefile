@@ -3,8 +3,8 @@ include targets.mk
 ARGS	=
 
 
-# COMPILE = cc -Wall -Wextra -Werror -g
-COMPILE = clang -Wall -Wextra -Werror
+# COMPILE = clang -Wall -Wextra -Werror
+COMPILE = cc -Wall -Wextra -Werror
 REMOVE = rm -f
 
 .PHONY: all run valg helg gdb clean fclean re
@@ -16,11 +16,11 @@ PARGS =
 
 NUM_CODERS		= 5
 TT_BURNOUT		= 1000
-TT_COMPILE		= 200
-TT_DEBUG		= 100
-TT_REFACTOR		= 100
-MIN_COMPILE		= 3
-DONGLE_CD		= 100
+TT_COMPILE		= 60
+TT_DEBUG		= 60
+TT_REFACTOR		= 60
+MIN_COMPILE		= 10
+DONGLE_CD		= 60
 SCHED			= edf
 
 ARGS = $(NUM_CODERS) $(TT_BURNOUT) $(TT_COMPILE) $(TT_DEBUG) $(TT_REFACTOR) $(MIN_COMPILE) $(DONGLE_CD) $(SCHED)

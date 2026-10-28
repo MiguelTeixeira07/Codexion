@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:10 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/28 20:03:49 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/28 20:52:59 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	create_threads(t_table *table, pthread_t *monitor)
 void	destroy_everything(t_table *table)
 {
 	int		i;
-	t_coder *coder;
+	t_coder	*coder;
 
 	i = 0;
 	coder = table->first;

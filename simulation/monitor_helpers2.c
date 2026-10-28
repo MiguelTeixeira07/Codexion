@@ -6,12 +6,13 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/27 18:10:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/27 18:33:59 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/28 21:32:35 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "simulation.h"
 #include "../utils/utils.h"
+#include <pthread.h>
 
 void	order_compile(t_node *curr)
 {
@@ -24,10 +25,22 @@ void	order_compile(t_node *curr)
 
 void	prepare_monitor(t_table *table, t_queue *queue)
 {
+	int		i;
+	t_coder	*coder;
+
 	wait_for_start(table);
 	pthread_mutex_lock(table->table_mutex);
 	update_queue(queue, table);
 	table->sim_start = gettime();
+	i = 0;
+	coder = table->first;
+	while (++i <= table->args->num_coders)
+	{
+		pthread_mutex_lock(coder->self_mutex);
+		coder->last_compile_start = table->sim_start;
+		pthread_mutex_unlock(coder->self_mutex);
+		coder = coder->next;
+	}
 	pthread_mutex_unlock(table->table_mutex);
 }
 
