@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/27 18:31:53 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/28 20:04:16 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,20 +53,18 @@ void	*monitor_routine(void *args)
 	return (NULL);
 }
 
-int	start_simulation(t_args *args)
+int	start_simulation(t_table *table)
 {
 	int			i;
-	t_table		*table;
 	pthread_t	monitor;
 
-	table = init_table(args);
-	if (!table)
-		return (-1);
 	i = 0;
-	while (++i <= args->num_coders)
+	while (++i <= table->args->num_coders)
 	{
 		if (table_push(table, i))
 			return (-1);
 	}
-	return (create_threads(table, &monitor));
+	if (create_threads(table, &monitor))
+		return (-1);
+	return (0);
 }

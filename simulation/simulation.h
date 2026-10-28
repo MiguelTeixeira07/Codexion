@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 16:22:03 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/27 18:34:08 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/28 18:43:06 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include "../parsing/parser.h"
 
 // simulation.c
-int		start_simulation(t_args *args);
+int		start_simulation(t_table *table);
 int		check_end(t_table *table);
 void	*monitor_routine(void *args);
 

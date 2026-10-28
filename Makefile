@@ -7,21 +7,21 @@ ARGS	=
 COMPILE = clang -Wall -Wextra -Werror
 REMOVE = rm -f
 
-.PHONY: all run valg clean fclean re t
+.PHONY: all run valg helg gdb clean fclean re
 # .SILENT:
 
 NAME = codexion
 
 PARGS = 
 
-NUM_CODERS		= 199
-TT_BURNOUT		= 300
-TT_COMPILE		= 60
-TT_DEBUG		= 60
-TT_REFACTOR		= 60
-MIN_COMPILE		= 5
-DONGLE_CD		= 60
-SCHED			= fifo
+NUM_CODERS		= 5
+TT_BURNOUT		= 1000
+TT_COMPILE		= 200
+TT_DEBUG		= 100
+TT_REFACTOR		= 100
+MIN_COMPILE		= 3
+DONGLE_CD		= 100
+SCHED			= edf
 
 ARGS = $(NUM_CODERS) $(TT_BURNOUT) $(TT_COMPILE) $(TT_DEBUG) $(TT_REFACTOR) $(MIN_COMPILE) $(DONGLE_CD) $(SCHED)
 
@@ -35,9 +35,6 @@ $(NAME): $(OBJS)
 	@echo "$$< is $<"
 	@echo "$$@ is $@"
 	$(COMPILE) $(PARGS) -c $< -o $@
-
-debug: fclean $(OBJS)
-	$(COMPILE) $(OBJS) -DDEBUG=1 -o $(NAME)
 
 run: # $(NAME)
 	./$(NAME) $(ARGS)

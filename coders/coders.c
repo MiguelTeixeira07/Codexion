@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:10 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/27 17:44:02 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/28 20:03:49 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,23 @@ int	create_threads(t_table *table, pthread_t *monitor)
 		curr = curr->next;
 	}
 	return (0);
+}
+
+void	destroy_everything(t_table *table)
+{
+	int		i;
+	t_coder *coder;
+
+	i = 0;
+	coder = table->first;
+	while (++i <= table->args->num_coders)
+	{
+		pthread_mutex_destroy(coder->self_mutex);
+		pthread_cond_destroy(coder->condition);
+		pthread_mutex_destroy(coder->left_dongle->dongle);
+		coder = coder->next;
+	}
+	pthread_mutex_destroy(table->table_mutex);
+	pthread_mutex_destroy(table->log_mutex);
+	pthread_cond_destroy(table->condition);
 }

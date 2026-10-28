@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coders.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:08 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/27 17:56:20 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/28 18:43:42 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int		debug_and_refactor(t_coder *args);
 //coders.c
 void	*coder(void *coder_info);
 int		create_threads(t_table *table, pthread_t *monitor);
+void	destroy_everything(t_table *table);
 
 //table.c
 int		table_push(t_table *self, int coder);
