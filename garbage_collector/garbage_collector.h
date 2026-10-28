@@ -6,7 +6,7 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:41 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/13 00:14:38 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/27 17:59:16 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,12 @@
 
 # include "../codexion.h"
 
-typedef struct s_garbage {
-    void *garbage;
-    struct s_garbage *next;
-} t_garbage;
+typedef struct s_garbage
+{
+	void				*garbage;
+	struct s_garbage	*next;
+}						t_garbage;
 
-void *gar_col(int action, size_t bytes);
+void	*gar_col(int action, size_t bytes);
 
 #endif

@@ -6,14 +6,17 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:57:03 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/23 19:26:28 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/27 18:46:44 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 #include "../garbage_collector/garbage_collector.h"
+#include "../coders/coders.h"
+#include "../parsing/parser.h"
 
-char	*ft_strdup(const char *s) {
+char	*ft_strdup(const char *s)
+{
 	char	*dest;
 	int		i;
 
@@ -35,12 +38,12 @@ int	ft_isdigit(char c)
 	return (c >= '0' && c <= '9');
 }
 
-__time_t gettime(void)
+__time_t	gettime(void)
 {
-	struct timeval tv;
+	struct timeval	tv;
 
 	if (gettimeofday(&tv, NULL) == -1)
-		return -1;
+		return (-1);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
@@ -58,4 +61,3 @@ void	log_msg(char *str, t_table *table, int coder_num)
 	pthread_mutex_unlock(table->log_mutex);
 	pthread_mutex_unlock(table->table_mutex);
 }
-

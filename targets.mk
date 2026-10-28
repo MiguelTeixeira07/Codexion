@@ -13,7 +13,7 @@ SRCS = $(addsuffix .c, \
 	$(addprefix $(Q_DIR)/,  queue_functions1 queue_functions2) \
 	$(addprefix $(UTIL_DIR)/, utils1 utils2) \
 	$(addprefix $(PARSE_DIR)/, parser) \
-	$(addprefix $(SIM_DIR)/, simulation monitor_helpers) \
+	$(addprefix $(SIM_DIR)/, simulation monitor_helpers1 monitor_helpers2) \
 )
 
 OBJS = $(SRCS:%.c=%.o)

@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:06 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/14 17:33:23 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/27 18:00:10 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "garbage_collector.h"
-
 
 static t_garbage	*add(t_garbage **list, void *garbage)
 {
@@ -20,19 +19,19 @@ static t_garbage	*add(t_garbage **list, void *garbage)
 
 	new_node = malloc(sizeof(t_garbage));
 	if (!new_node)
-		return NULL;
+		return (NULL);
 	new_node->garbage = garbage;
 	new_node->next = NULL;
 	if (!*list)
 	{
 		*list = new_node;
-		return new_node;
+		return (new_node);
 	}
 	curr = *list;
 	while (curr->next)
 		curr = curr->next;
 	curr->next = new_node;
-	return new_node;
+	return (new_node);
 }
 
 static void	dump(t_garbage **garbage)
@@ -40,10 +39,10 @@ static void	dump(t_garbage **garbage)
 	t_garbage	*node;
 	t_garbage	*temp;
 
-	if(!*garbage)
-		return;
+	if (!*garbage)
+		return ;
 	node = *garbage;
-	while(node)
+	while (node)
 	{
 		free(node->garbage);
 		temp = node->next;
@@ -57,17 +56,17 @@ void	*gar_col(int action, size_t bytes)
 	static t_garbage	*garbage_list;
 	void				*data;
 
-	if(action == ALLOC)
+	if (action == ALLOC)
 	{
 		data = malloc(bytes);
-		if(!data)
+		if (!data)
 		{
 			gar_col(DUMP, 0);
-			return NULL;
+			return (NULL);
 		}
 		memset(data, 0, bytes);
 		add(&garbage_list, data);
-		return data;
+		return (data);
 	}
 	dump(&garbage_list);
 	return (NULL);

@@ -6,25 +6,32 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 16:22:03 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/23 17:02:16 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/27 18:34:08 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef SIMULATION_H
 # define SIMULATION_H
 
 # include "../codexion.h"
+# include "../coders/coders.h"
+# include "../queue/queue.h"
+# include "../parsing/parser.h"
 
 // simulation.c
-int 	start_simulation(struct s_args *args);
-int     check_end(struct s_table *table);
-void    *monitor_routine(void *args);
+int		start_simulation(t_args *args);
+int		check_end(t_table *table);
+void	*monitor_routine(void *args);
 
-// monitor_helpers.c
-void	update_queue(struct s_queue *queue, struct s_table *table);
-void	allow_compiles(struct s_queue *queue);
-void	wait_for_start(struct s_table *table);
-void	update_end(struct s_table *table);
+// monitor_helpers1.c
+void	update_queue(t_queue *queue, t_table *table);
+void	allow_compiles(t_queue *queue);
+void	wait_for_start(t_table *table);
+void	update_end(t_table *table);
+
+// monitor_helpers2.c
+void	order_compile(t_node *curr);
+void	prepare_monitor(t_table *table, t_queue *queue);
+void	burn_out(t_coder *coder);
 
 #endif

@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   queue_functions2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/30 19:05:11 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/17 20:59:10 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/27 17:37:44 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "queue.h"
+#include "../coders/coders.h"
+#include "../garbage_collector/garbage_collector.h"
 
 t_queue	*init_queue(void)
 {

@@ -6,11 +6,13 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:52 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/19 19:52:06 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/27 18:04:00 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "queue.h"
+#include "../coders/coders.h"
+#include "../garbage_collector/garbage_collector.h"
 
 static void	queue_fifo_push(t_queue *self, t_coder *coder)
 {
@@ -38,18 +40,18 @@ static void	swap_with_previous(t_queue *queue, t_node *node)
 	prev = node->previous;
 	before_prev = prev->previous;
 	next = node->next;
-    if (!queue->top || !node || !node->previous)
-        return ;
-    if (before_prev)
-        before_prev->next = node;
-    else
-        queue->top = node;
-    node->previous = before_prev;
-    node->next = prev;
-    prev->previous = node;
-    prev->next = next;
-    if (next)
-        next->previous = prev;
+	if (!queue->top || !node || !node->previous)
+		return ;
+	if (before_prev)
+		before_prev->next = node;
+	else
+		queue->top = node;
+	node->previous = before_prev;
+	node->next = prev;
+	prev->previous = node;
+	prev->next = next;
+	if (next)
+		next->previous = prev;
 }
 
 void	queue_push(t_queue *self, t_coder *coder, char *scheduler)
@@ -59,9 +61,13 @@ void	queue_push(t_queue *self, t_coder *coder, char *scheduler)
 	curr = self->bottom;
 	queue_fifo_push(self, coder);
 	if (strcmp(scheduler, "edf"))
-		while (curr && curr->previous && curr->previous->coder->last_compile_start > curr->coder->last_compile_start)
+	{
+		while (curr && curr->previous
+			&& curr->previous->coder->last_compile_start
+			> curr->coder->last_compile_start)
 		{
 			swap_with_previous(self, curr);
 			curr = curr->previous;
 		}
+	}
 }

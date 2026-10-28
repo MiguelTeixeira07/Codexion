@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   coders.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:10 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/20 16:42:21 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/27 17:44:02 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
+#include "../simulation/simulation.h"
+#include "../garbage_collector/garbage_collector.h"
 
 void	*coder(void *coder_info)
 {
@@ -21,7 +23,8 @@ void	*coder(void *coder_info)
 	pthread_cond_wait(coder->table->condition, coder->table->table_mutex);
 	pthread_mutex_unlock(coder->table->table_mutex);
 	while (1)
-		if (compile(coder) || check_end(coder->table) || debug_and_refactor(coder))
+		if (compile(coder) || check_end(coder->table)
+			|| debug_and_refactor(coder))
 			break ;
 	pthread_mutex_lock(coder->self_mutex);
 	coder->waiting = 0;
@@ -42,7 +45,8 @@ void	wake_em_up(t_table *table)
 	pthread_mutex_unlock(table->table_mutex);
 }
 
-int	create_threads(t_table *table, pthread_t *monitor) {
+int	create_threads(t_table *table, pthread_t *monitor)
+{
 	t_coder	*curr;
 	int		i;
 
@@ -50,9 +54,9 @@ int	create_threads(t_table *table, pthread_t *monitor) {
 	i = 0;
 	monitor = gar_col(ALLOC, sizeof(pthread_t));
 	if (!monitor)
-		return -1;
+		return (-1);
 	pthread_create(monitor, NULL, &monitor_routine, table);
-	while(++i <= table->args->num_coders)
+	while (++i <= table->args->num_coders)
 	{
 		pthread_create(curr->thread, NULL, &coder, curr);
 		curr = curr->next;
@@ -67,5 +71,5 @@ int	create_threads(t_table *table, pthread_t *monitor) {
 		pthread_join(*curr->thread, NULL);
 		curr = curr->next;
 	}
-	return 0;
+	return (0);
 }

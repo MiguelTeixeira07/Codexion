@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/30 19:16:41 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/20 23:55:51 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/27 17:39:30 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
-#include <pthread.h>
+#include "../garbage_collector/garbage_collector.h"
 
 static int	outsize(int n)
 {

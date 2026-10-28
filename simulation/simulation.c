@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   simulation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:02 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/24 15:27:20 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/27 18:31:53 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "simulation.h"
-#include <pthread.h>
-
+#include "../garbage_collector/garbage_collector.h"
 
 int	check_end(t_table *table)
 {
@@ -35,12 +34,8 @@ void	*monitor_routine(void *args)
 
 	table = (t_table *)args;
 	can_terminate = 0;
-	wait_for_start(table);
 	queue = gar_col(ALLOC, sizeof(t_queue));
-	pthread_mutex_lock(table->table_mutex);
-	update_queue(queue, table);
-	table->sim_start = gettime();
-	pthread_mutex_unlock(table->table_mutex);
+	prepare_monitor(table, queue);
 	while (!can_terminate)
 	{
 		update_end(table);
@@ -66,13 +61,12 @@ int	start_simulation(t_args *args)
 
 	table = init_table(args);
 	if (!table)
-		return -1;
+		return (-1);
 	i = 0;
 	while (++i <= args->num_coders)
 	{
-		if (table_push(table, i)) {
-			return -1;
-		}
+		if (table_push(table, i))
+			return (-1);
 	}
 	return (create_threads(table, &monitor));
 }

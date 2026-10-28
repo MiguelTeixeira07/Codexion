@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: migteixe <migteixe@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/19 17:51:18 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/07 23:18:13 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/27 18:00:30 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,3 @@ typedef struct s_args
 int	parse(char **args, t_args *output);
 
 #endif
-

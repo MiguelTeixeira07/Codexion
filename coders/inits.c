@@ -6,12 +6,13 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/06 22:18:44 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/19 18:04:16 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/27 17:56:54 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
-
+#include "../garbage_collector/garbage_collector.h"
+#include "../parsing/parser.h"
 
 int	first_coder(t_table *self, t_coder *new)
 {
@@ -76,7 +77,7 @@ int	init_coder(t_table *table, t_coder **new, int coder)
 
 t_table	*init_table(t_args *prog_args)
 {
-	t_table *table;
+	t_table	*table;
 
 	table = gar_col(ALLOC, sizeof(t_table));
 	if (!table)
@@ -99,5 +100,5 @@ t_table	*init_table(t_args *prog_args)
 	pthread_mutex_init(table->log_mutex, NULL);
 	pthread_cond_init(table->condition, NULL);
 	table->args = prog_args;
-	return table;
+	return (table);
 }

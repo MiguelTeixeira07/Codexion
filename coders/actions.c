@@ -6,12 +6,13 @@
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/20 00:56:30 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/23 18:25:31 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/27 17:49:30 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "coders.h"
-#include <pthread.h>
+#include "../utils/utils.h"
+#include "../simulation/simulation.h"
 
 static int	smart_sleep(long duration_ms, t_coder *coder)
 {
@@ -27,7 +28,6 @@ static int	smart_sleep(long duration_ms, t_coder *coder)
 		now = gettime();
 		if (now - start >= duration_ms)
 			break ;
-		//usleep(500);
 	}
 	pthread_mutex_lock(coder->self_mutex);
 	return (0);
@@ -35,8 +35,6 @@ static int	smart_sleep(long duration_ms, t_coder *coder)
 
 static void	wait_in_list(t_coder *coder)
 {
-	//struct timespec	abstime;
-
 	pthread_mutex_lock(coder->table->table_mutex);
 	coder->waiting = 1;
 	pthread_cond_wait(coder->condition, coder->table->table_mutex);
@@ -45,7 +43,11 @@ static void	wait_in_list(t_coder *coder)
 	pthread_mutex_unlock(coder->table->table_mutex);
 	pthread_mutex_lock(coder->self_mutex);
 	pthread_cond_wait(coder->condition, coder->self_mutex);
+	coder->compiling = 1;
 	pthread_mutex_unlock(coder->self_mutex);
+	pthread_mutex_lock(coder->table->table_mutex);
+	coder->table->coders_compiling++;
+	pthread_mutex_unlock(coder->table->table_mutex);
 }
 
 static int	take_dongles(t_coder *coder)
@@ -59,19 +61,20 @@ static int	take_dongles(t_coder *coder)
 	{
 		if (check_end(coder->table))
 			return (1);
-		if (coder->left_dongle->last_used + coder->table->args->dongle_cooldown < gettime() && !lflag)
+		if (coder->left_dongle->last_used + coder->table->args->dongle_cooldown
+			< gettime() && !lflag)
 		{
 			lflag = 1;
 			log_msg("has taken a dongle", coder->table, coder->number);
 		}
-		if (coder->right_dongle->last_used + coder->table->args->dongle_cooldown < gettime() && !rflag && coder->table->args->num_coders != 1)
+		if (coder->right_dongle->last_used + coder->table->args->dongle_cooldown
+			< gettime() && !rflag && coder->table->args->num_coders != 1)
 		{
 			rflag = 1;
 			log_msg("has taken a dongle", coder->table, coder->number);
 		}
 		if (lflag && rflag)
 			break ;
-		//usleep(500);
 	}
 	return (0);
 }
@@ -79,12 +82,6 @@ static int	take_dongles(t_coder *coder)
 int	compile(t_coder *coder)
 {
 	wait_in_list(coder);
-	pthread_mutex_lock(coder->self_mutex);
-	coder->compiling = 1;
-	pthread_mutex_unlock(coder->self_mutex);
-	pthread_mutex_lock(coder->table->table_mutex);
-	coder->table->coders_compiling++;
-	pthread_mutex_unlock(coder->table->table_mutex);
 	if (take_dongles(coder))
 		return (1);
 	log_msg("is compiling", coder->table, coder->number);
@@ -117,13 +114,13 @@ int	debug_and_refactor(t_coder *coder)
 	pthread_mutex_lock(coder->self_mutex);
 	sleep_res = smart_sleep(coder->table->args->time_to_debug, coder);
 	if (sleep_res)
-		return sleep_res;
+		return (sleep_res);
 	pthread_mutex_unlock(coder->self_mutex);
 	log_msg("is refactoring", coder->table, coder->number);
 	pthread_mutex_lock(coder->self_mutex);
 	sleep_res = smart_sleep(coder->table->args->time_to_refactor, coder);
 	if (sleep_res)
-		return sleep_res;
+		return (sleep_res);
 	pthread_mutex_unlock(coder->self_mutex);
 	return (0);
 }

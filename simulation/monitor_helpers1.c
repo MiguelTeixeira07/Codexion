@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   monitor_helpers.c                                  :+:      :+:    :+:   */
+/*   monitor_helpers1.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: migteixe <migteixe@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/16 17:07:27 by migteixe          #+#    #+#             */
-/*   Updated: 2026/10/23 19:11:33 by migteixe         ###   ########.fr       */
+/*   Updated: 2026/10/27 18:44:28 by migteixe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "simulation.h"
+#include "../utils/utils.h"
 
 void	update_queue(t_queue *queue, t_table *table)
 {
@@ -39,6 +40,16 @@ void	update_queue(t_queue *queue, t_table *table)
 	}
 }
 
+static void	set_conditions(t_node *curr, int *cond1, int *cond2)
+{
+	pthread_mutex_lock(curr->coder->prev->self_mutex);
+	*cond1 = !curr->coder->prev->compiling;
+	pthread_mutex_unlock(curr->coder->prev->self_mutex);
+	pthread_mutex_lock(curr->coder->next->self_mutex);
+	*cond2 = !curr->coder->next->compiling;
+	pthread_mutex_unlock(curr->coder->next->self_mutex);
+}
+
 void	allow_compiles(t_queue *queue)
 {
 	t_node	*curr_q;
@@ -61,27 +72,15 @@ void	allow_compiles(t_queue *queue)
 			}
 		}
 		pthread_mutex_unlock(prev->coder->self_mutex);
-		pthread_mutex_lock(curr_q->coder->prev->self_mutex);
-		cond1 =  !curr_q->coder->prev->compiling;
-		pthread_mutex_unlock(curr_q->coder->prev->self_mutex);
-		pthread_mutex_lock(curr_q->coder->next->self_mutex);
-		cond2 = !curr_q->coder->next->compiling;
-		pthread_mutex_unlock(curr_q->coder->next->self_mutex);
+		set_conditions(curr_q, &cond1, &cond2);
 		if (cond1 && cond2)
-		{
-			pthread_mutex_lock(curr_q->coder->self_mutex);
-			curr_q->n_compiles = curr_q->coder->compile_ammount;
-			pthread_cond_signal(curr_q->coder->condition);
-			pthread_mutex_unlock(curr_q->coder->self_mutex);
-			usleep(10);
-		}
+			order_compile(curr_q);
 		curr_q = curr_q->next;
 	}
 }
 
 void	update_end(t_table *table)
 {
-	__time_t	now;
 	t_coder		*coder;
 	int			i;
 
@@ -91,20 +90,16 @@ void	update_end(t_table *table)
 	while (++i <= table->args->num_coders)
 	{
 		pthread_mutex_lock(coder->self_mutex);
-		if (coder->compile_ammount >= table->args->num_compiles && !coder->has_finished)
+		if (coder->compile_ammount >= table->args->num_compiles
+			&& !coder->has_finished)
 		{
 			coder->has_finished = 1;
 			table->finished++;
 		}
-		now = gettime() - table->sim_start;
-		if (now - coder->last_compile_start >= table->args->time_to_burnout)
+		if (gettime() - table->sim_start - coder->last_compile_start
+			>= table->args->time_to_burnout)
 		{
-			pthread_mutex_unlock(coder->self_mutex);
-			pthread_mutex_unlock(table->table_mutex);
-			log_msg("burned out", table, coder->number);
-			pthread_mutex_lock(table->table_mutex);
-			table->dead_coder = 1;
-			pthread_mutex_unlock(table->table_mutex);
+			burn_out(coder);
 			return ;
 		}
 		pthread_mutex_unlock(coder->self_mutex);
