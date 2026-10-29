@@ -4,7 +4,7 @@ ARGS	=
 
 
 # COMPILE = clang -Wall -Wextra -Werror
-COMPILE = cc -Wall -Wextra -Werror
+COMPILE = cc -Wall -Wextra -Werror -pthread
 REMOVE = rm -f
 
 .PHONY: all run valg helg gdb clean fclean re
